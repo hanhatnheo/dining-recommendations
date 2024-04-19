@@ -45,6 +45,45 @@ const randomrestaurant = async function(req, res) {
   });
 }
 
+// Route 5: GET /attractions
+const attractions = async function(req, res) {
+  const type = req.query.type ?? '';
+
+  if (type === '') {
+    connection.query(`
+      SELECT *
+      FROM Attractions
+      WHERE type = 'viewpoint' OR type = 'museum' OR type = 'park'
+      OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
+      OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
+      OR type = 'attraction'
+      `
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+  } else {
+    connection.query(`
+      SELECT name, type, latitude, longitude
+      FROM Attractions
+      WHERE type = '${type}'
+      `
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+  }
+}
+
 module.exports = {
   randomrestaurant,
+  attractions,
 }
