@@ -12,6 +12,10 @@ CREATE TABLE Restaurants(
     cat_1 varchar(255),
     cat_2 varchar(255),
     cat_3 varchar(255),
+    drink_score DECIMAL(20, 15),
+    value_score DECIMAL(20, 15),
+    food_score DECIMAL(20, 15),
+    service_score DECIMAL(20, 15),
     PRIMARY KEY (business_id)
 );
 
