@@ -12,8 +12,8 @@ const connection = mysql.createConnection({
 });
 connection.connect((err) => err && console.log(err));
 
-// Example Route: GET /randomrestaurant
-const randomrestaurant = async function(req, res) {
+// Example Route: GET /random_restaurant
+const random_restaurant = async function(req, res) {
   // you can use a ternary operator to check the value of request query values
   // which can be particularly useful for setting the default value of queries
   // note if users do not provide a value for the query it will be undefined, which is false
@@ -83,7 +83,39 @@ const attractions = async function(req, res) {
   }
 }
 
+// Route 5: GET /restaurant_recommendations/:name
+const restaurant_recommendations = async function(req, res) {
+  const name = req.params.name;
+  const distance = req.query.distance ?? 23;
+  const rating = req.query.rating ?? 0;
+  const drinkScore = req.query.drink_score ?? -25;
+  const valueScore = req.query.value_score ?? -25;
+  const foodScore = req.query.food_score ?? -25;
+  const serviceScore = req.query.service_score ?? -25;
+  
+  connection.query(`
+    SELECT R.name, R.stars, R.address, R.latitude, R.longitude
+    FROM Attractions A JOIN Nearby N ON A.attraction_id = N.attraction_id
+    JOIN Restaurants R ON N.business_id = R.business_id
+    WHERE A.name = '${name}' AND R.stars >= '${rating}' AND 
+    R.drink_score >= '${drinkScore}' AND R.value_score >= '${valueScore}' AND
+    R.food_score >= '${foodScore}' AND R.service_score >= '${serviceScore}'
+    AND distance <= '${distance}'
+    ORDER BY distance
+    LIMIT 20;
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
-  randomrestaurant,
+  random_restaurant,
   attractions,
+  restaurant_recommendations,
 }
