@@ -1,0 +1,9 @@
+{
+  "rds_host": "recommendationsdatabase.ce2vy4folg32.us-east-1.rds.amazonaws.com",
+  "rds_port": "1521",
+  "rds_user": "admin1",
+  "rds_password": "Yelp123!123?",
+  "rds_db": "recommendations_DB",
+  "server_host": "localhost",
+  "server_port": "8080"
+}
