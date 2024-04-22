@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
 });
 connection.connect((err) => err && console.log(err));
 
-// Example Route: GET /random_restaurant
+// Route 1: GET /random_restaurant
 const random_restaurant = async function(req, res) {
   // you can use a ternary operator to check the value of request query values
   // which can be particularly useful for setting the default value of queries
@@ -45,7 +45,7 @@ const random_restaurant = async function(req, res) {
   });
 }
 
-// Route 1: GET /attractions
+// Route 2: GET /attractions
 const attractions = async function(req, res) {
   const type = req.query.type ?? '';
 
@@ -83,7 +83,7 @@ const attractions = async function(req, res) {
   }
 }
 
-// Route 2: GET /restaurant_recommendations/:name
+// Route 3: GET /restaurant_recommendations/:name
 const restaurant_recommendations = async function(req, res) {
   const name = req.params.name;
   const distance = req.query.distance ?? 23;
@@ -114,7 +114,7 @@ const restaurant_recommendations = async function(req, res) {
   });
 }
 
-// Route 3: GET /all_restaurants
+// Route 4: GET /all_restaurants
 const all_restaurants = async function(req, res) {
   const name = req.query.name ?? '';
   const rating = req.query.rating ?? 0;
