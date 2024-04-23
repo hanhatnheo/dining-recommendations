@@ -239,9 +239,30 @@ const all_restaurants = async function(req, res) {
   }
 }
 
+// Route 5: GET /restaurant_info/:name
+const restaurant_info = async function(req, res) {
+  const name = req.params.name;
+
+  connection.query(`
+    SELECT *
+    FROM Restaurants RES JOIN Reviews REV ON RES.business_id = REV.business_id
+    WHERE RES.name = '${name}'
+    LIMIT 100;
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
   random_restaurant,
   attractions,
   restaurant_recommendations,
   all_restaurants,
+  restaurant_info,
 }
