@@ -259,10 +259,30 @@ const restaurant_info = async function(req, res) {
   });
 }
 
+// Route 6: GET /attraction_info/:name
+const attraction_info = async function(req, res) {
+  const name = req.params.name;
+
+  connection.query(`
+    SELECT *
+    FROM Attractions
+    WHERE name = '${name}';
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
   random_restaurant,
   attractions,
   restaurant_recommendations,
   all_restaurants,
   restaurant_info,
+  attraction_info,
 }
