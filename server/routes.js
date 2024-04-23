@@ -147,10 +147,11 @@ const all_restaurants = async function(req, res) {
   const valueScore = req.query.value_score ?? -25;
   const foodScore = req.query.food_score ?? -25;
   const serviceScore = req.query.service_score ?? -25;
-  const category = req.query.category ?? 'NONE';
+  const category = req.query.category ?? '';
+  const zipcode = req.query.zipcode ?? '';
 
   if (name === '') {
-    if (category === 'NONE') {
+    if (category === '') {
       connection.query(`
         WITH ReviewsWithTheirRestaurants AS (
         SELECT RES.business_id, REV.stars, REV.text
@@ -177,7 +178,7 @@ const all_restaurants = async function(req, res) {
         FROM Restaurants R
         WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
           R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
-          R.service_score >= '${serviceScore}';
+          R.service_score >= '${serviceScore}' AND R.address LIKE '%${zipcode}';
         `
         , (err, data) => {
         if (err || data.length === 0) {
@@ -215,7 +216,8 @@ const all_restaurants = async function(req, res) {
         WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
           R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
           R.service_score >= '${serviceScore}' AND (R.cat_1 LIKE '%${category}%' OR 
-          R.cat_2 LIKE '%${category}%' OR R.cat_3 LIKE '%${category}%');
+          R.cat_2 LIKE '%${category}%' OR R.cat_3 LIKE '%${category}%') AND 
+          R.address LIKE '%${zipcode}';
         `
         , (err, data) => {
         if (err || data.length === 0) {
@@ -251,7 +253,7 @@ const all_restaurants = async function(req, res) {
                 AND stars <= 1
               LIMIT 1) as mid_rating_review_text
       FROM Restaurants R
-      WHERE R.name = '${name}';
+      WHERE R.name = '${name}' AND R.address LIKE '%${zipcode}';
       `
       , (err, data) => {
       if (err || data.length === 0) {
@@ -305,10 +307,12 @@ const attraction_info = async function(req, res) {
 
 // Route 8: GET /most_popular_restaurants
 const most_popular_restaurants = async function(req, res) {
+  const zipcode = req.query.zipcode ?? '';
+
   connection.query(`
     WITH MostPopularRestaurants AS (
     SELECT RES.business_id, RES.name, RES.address, RES.stars, COUNT(*) AS review_count
-    FROM Reviews REV JOIN Restaurants RES ON REV.business_id = RES.business_id
+    FROM Reviews REV JOIN Restaurants RES ON REV.business_id = RES.business_id AND RES.address LIKE '%${zipcode}'
     GROUP BY RES.business_id
     ORDER BY review_count DESC
     LIMIT 100
@@ -342,6 +346,8 @@ const most_popular_restaurants = async function(req, res) {
 
 // Route 9: GET /outstanding_restaurants
 const outstanding_restaurants = async function(req, res) {
+  const zipcode = req.query.zipcode ?? '';
+
   connection.query(`
     WITH CategoryAverages AS (
       SELECT business_id, name, cat_1, AVG(stars) AS avg_category1_rating
@@ -352,7 +358,7 @@ const outstanding_restaurants = async function(req, res) {
     SELECT R.business_id, R.name, R.stars, R.cat_1
     FROM Restaurants R
     JOIN CategoryAverages CA ON R.cat_1 = CA.cat_1
-    WHERE R.stars > CA.avg_category1_rating
+    WHERE R.stars > CA.avg_category1_rating AND R.address LIKE '%${zipcode}'
     ORDER BY R.cat_1, R.stars DESC;  
     `
     , (err, data) => {
@@ -369,6 +375,7 @@ const outstanding_restaurants = async function(req, res) {
 const best_restaurants_per_category = async function(req, res) {
   const category = req.query.category ?? '';
   const type = req.query.type ?? '';
+  const zipcode = req.query.zipcode ?? '';
 
   if (category === '') {
     if (type === '') {
@@ -379,8 +386,7 @@ const best_restaurants_per_category = async function(req, res) {
                 R.cat_1,
                 AVG(Rev.stars) AS average_rating,
                 ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
-          FROM Restaurants R
-          JOIN Reviews Rev ON R.business_id = Rev.business_id
+          FROM Restaurants R JOIN Reviews Rev ON R.business_id = Rev.business_id AND R.address LIKE '%${zipcode}'
           GROUP BY R.business_id
         )
 
@@ -404,8 +410,7 @@ const best_restaurants_per_category = async function(req, res) {
                 R.cat_1,
                 AVG(Rev.stars) AS average_rating,
                 ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
-          FROM Restaurants R
-          JOIN Reviews Rev ON R.business_id = Rev.business_id
+          FROM Restaurants R JOIN Reviews Rev ON R.business_id = Rev.business_id AND R.address LIKE '%${zipcode}'
           WHERE EXISTS (SELECT *
                         FROM Nearby N
                         JOIN Attractions A ON N.attraction_id = A.attraction_id
@@ -435,8 +440,7 @@ const best_restaurants_per_category = async function(req, res) {
                R.cat_1,
                AVG(Rev.stars) AS average_rating,
                ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
-        FROM Restaurants R
-        JOIN Reviews Rev ON R.business_id = Rev.business_id
+        FROM Restaurants R JOIN Reviews Rev ON R.business_id = Rev.business_id AND R.address LIKE '%${zipcode}'
         GROUP BY R.business_id
       )
 
@@ -461,7 +465,7 @@ const best_restaurants_per_category = async function(req, res) {
               AVG(Rev.stars) AS average_rating,
               ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
         FROM Restaurants R
-        JOIN Reviews Rev ON R.business_id = Rev.business_id
+        JOIN Reviews Rev ON R.business_id = Rev.business_id AND R.address LIKE '%${zipcode}'
         WHERE EXISTS (SELECT *
                       FROM Nearby N
                       JOIN Attractions A ON N.attraction_id = A.attraction_id
@@ -487,6 +491,8 @@ const best_restaurants_per_category = async function(req, res) {
 
 // Route 11: GET /recommended_restaurants
 const recommended_restaurants = async function(req, res) {
+  const zipcode = req.query.zipcode ?? '';
+
   connection.query(`
     SELECT *
     FROM Restaurants RES
@@ -500,8 +506,68 @@ const recommended_restaurants = async function(req, res) {
         FROM Nearby N
         JOIN Attractions AT ON N.attraction_id = AT.attraction_id
         WHERE N.business_id = RES.business_id
-    ) > 1
+    ) > 1 AND RES.address LIKE '%${zipcode}'
     GROUP BY RES.business_id;
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
+// Route 12: GET /zipcode_ranking
+const zipcode_ranking = async function(req, res) {
+  connection.query(`
+    WITH RestaurantRatings AS (
+      SELECT
+          R.business_id,
+          RIGHT(R.address, 5) AS ZipCode,
+          AVG(Rev.stars) AS AverageRating,
+          COUNT(Rev.review_id) AS TotalReviews
+      FROM Restaurants R
+      JOIN Reviews Rev ON R.business_id = Rev.business_id
+      GROUP BY R.business_id
+    ),
+    ZipCodeMetrics AS (
+        SELECT
+            RR.ZipCode,
+            COUNT(RR.business_id) AS NumberOfRestaurants,
+            AVG(RR.AverageRating) AS ZipCodeAverageRating,
+            SUM(RR.TotalReviews) AS ZipCodeTotalReviews
+        FROM RestaurantRatings RR
+        GROUP BY RR.ZipCode
+    ),
+    NearbyMuseums AS (
+        SELECT DISTINCT
+            RIGHT(R.address, 5) AS ZipCode
+        FROM Restaurants R
+        JOIN Nearby N ON R.business_id = N.business_id
+        JOIN Attractions A ON N.attraction_id = A.attraction_id
+        WHERE A.type = 'Museum'
+    ),
+    RankedZipCodes AS (
+        SELECT
+            ZM.ZipCode,
+            ZM.NumberOfRestaurants,
+            ZM.ZipCodeAverageRating,
+            ZM.ZipCodeTotalReviews,
+            RANK() OVER (ORDER BY ZM.ZipCodeAverageRating DESC, ZM.NumberOfRestaurants DESC, ZM.ZipCodeTotalReviews DESC) AS ZipCodeRank
+        FROM ZipCodeMetrics ZM
+        JOIN NearbyMuseums NM ON ZM.ZipCode = NM.ZipCode
+        WHERE ZM.NumberOfRestaurants > 5 AND ZM.ZipCodeAverageRating > 4.0 AND ZM.ZipCodeTotalReviews > 100
+    )
+    SELECT
+        RZ.ZipCode,
+        RZ.NumberOfRestaurants,
+        RZ.ZipCodeAverageRating,
+        RZ.ZipCodeTotalReviews,
+        RZ.ZipCodeRank
+    FROM RankedZipCodes RZ
+    ORDER BY RZ.ZipCodeRank;
     `
     , (err, data) => {
     if (err || data.length === 0) {
@@ -525,4 +591,5 @@ module.exports = {
   outstanding_restaurants,
   best_restaurants_per_category,
   recommended_restaurants,
+  zipcode_ranking,
 }
