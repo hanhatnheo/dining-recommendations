@@ -315,6 +315,31 @@ const most_popular_restaurants = async function(req, res) {
   });
 }
 
+// Route 8: GET /outstanding_restaurants
+const outstanding_restaurants = async function(req, res) {
+  connection.query(`
+    WITH CategoryAverages AS (
+      SELECT business_id, name, cat_1, AVG(stars) AS avg_category1_rating
+      FROM Restaurants
+      GROUP BY cat_1
+    )
+    
+    SELECT R.business_id, R.name, R.stars, R.cat_1
+    FROM Restaurants R
+    JOIN CategoryAverages CA ON R.cat_1 = CA.cat_1
+    WHERE R.stars > CA.avg_category1_rating
+    ORDER BY R.cat_1, R.stars DESC;  
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
   random_restaurant,
   attractions,
@@ -323,4 +348,5 @@ module.exports = {
   restaurant_info,
   attraction_info,
   most_popular_restaurants,
+  outstanding_restaurants,
 }
