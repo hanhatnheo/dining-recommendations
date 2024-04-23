@@ -45,7 +45,32 @@ const random_restaurant = async function(req, res) {
   });
 }
 
-// Route 2: GET /attractions
+// Route 2: GET /random_attraction
+const random_attraction = async function(req, res) {
+  connection.query(`
+    SELECT *
+    FROM Attractions
+    WHERE type = 'viewpoint' OR type = 'museum' OR type = 'park'
+      OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
+      OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
+      OR type = 'attraction'
+    LIMIT 1
+  `, (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({});
+    } else {
+      res.json({
+        name: data[0].name,
+        longitude: data[0].longitude,
+        latitude: data[0].latitude,
+        website: data[0].website,
+      });
+    }
+  });
+}
+
+// Route 3: GET /attractions
 const attractions = async function(req, res) {
   const type = req.query.type ?? '';
 
@@ -83,7 +108,7 @@ const attractions = async function(req, res) {
   }
 }
 
-// Route 3: GET /restaurant_recommendations/:name
+// Route 4: GET /restaurant_recommendations/:name
 const restaurant_recommendations = async function(req, res) {
   const name = req.params.name;
   const distance = req.query.distance ?? 23;
@@ -114,7 +139,7 @@ const restaurant_recommendations = async function(req, res) {
   });
 }
 
-// Route 4: GET /all_restaurants
+// Route 5: GET /all_restaurants
 const all_restaurants = async function(req, res) {
   const name = req.query.name ?? '';
   const rating = req.query.rating ?? 0;
@@ -239,7 +264,7 @@ const all_restaurants = async function(req, res) {
   }
 }
 
-// Route 5: GET /restaurant_info/:name
+// Route 6: GET /restaurant_info/:name
 const restaurant_info = async function(req, res) {
   const name = req.params.name;
 
@@ -259,7 +284,7 @@ const restaurant_info = async function(req, res) {
   });
 }
 
-// Route 6: GET /attraction_info/:name
+// Route 7: GET /attraction_info/:name
 const attraction_info = async function(req, res) {
   const name = req.params.name;
 
@@ -278,7 +303,7 @@ const attraction_info = async function(req, res) {
   });
 }
 
-// Route 7: GET /most_popular_restaurants
+// Route 8: GET /most_popular_restaurants
 const most_popular_restaurants = async function(req, res) {
   connection.query(`
     WITH MostPopularRestaurants AS (
@@ -315,7 +340,7 @@ const most_popular_restaurants = async function(req, res) {
   });
 }
 
-// Route 8: GET /outstanding_restaurants
+// Route 9: GET /outstanding_restaurants
 const outstanding_restaurants = async function(req, res) {
   connection.query(`
     WITH CategoryAverages AS (
@@ -329,21 +354,6 @@ const outstanding_restaurants = async function(req, res) {
     JOIN CategoryAverages CA ON R.cat_1 = CA.cat_1
     WHERE R.stars > CA.avg_category1_rating
     ORDER BY R.cat_1, R.stars DESC;  
-    `
-    , (err, data) => {
-    if (err || data.length === 0) {
-      console.log(err);
-      res.json([]);
-    } else {
-      res.json(data);
-    }
-  });
-}
-
-// Route 9: GET /most_varied_restaurants
-const most_varied_restaurants = async function(req, res) {
-  connection.query(`
-
     `
     , (err, data) => {
     if (err || data.length === 0) {
@@ -475,8 +485,37 @@ const best_restaurants_per_category = async function(req, res) {
   }
 }
 
+// Route 11: GET /recommended_restaurants
+const recommended_restaurants = async function(req, res) {
+  connection.query(`
+    SELECT *
+    FROM Restaurants RES
+    WHERE NOT EXISTS (
+        SELECT REV.business_id
+        FROM Reviews REV
+        WHERE RES.business_id = REV.business_id AND RES.stars < 4
+    )
+    AND (
+        SELECT COUNT(DISTINCT AT.attraction_id)
+        FROM Nearby N
+        JOIN Attractions AT ON N.attraction_id = AT.attraction_id
+        WHERE N.business_id = RES.business_id
+    ) > 1
+    GROUP BY RES.business_id;
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
   random_restaurant,
+  random_attraction,
   attractions,
   restaurant_recommendations,
   all_restaurants,
@@ -484,6 +523,6 @@ module.exports = {
   attraction_info,
   most_popular_restaurants,
   outstanding_restaurants,
-  most_varied_restaurants,
   best_restaurants_per_category,
+  recommended_restaurants,
 }
