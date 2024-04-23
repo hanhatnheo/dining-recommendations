@@ -280,14 +280,30 @@ const attraction_info = async function(req, res) {
 
 // Route 7: GET /most_popular_restaurants
 const most_popular_restaurants = async function(req, res) {
-  const name = req.params.name;
-
   connection.query(`
-    SELECT RES.name, RES.address, RES.stars, COUNT(*) AS review_count
+    WITH MostPopularRestaurants AS (
+    SELECT RES.business_id, RES.name, RES.address, RES.stars, COUNT(*) AS review_count
     FROM Reviews REV JOIN Restaurants RES ON REV.business_id = RES.business_id
     GROUP BY RES.business_id
     ORDER BY review_count DESC
-    LIMIT 100;
+    LIMIT 100
+    )
+
+    SELECT MPR.business_id, MPR.name, MPR.address, MPR.stars, MPR.review_count,
+        (SELECT R.text
+        FROM MostPopularRestaurants MPR
+        WHERE MPR.business_id = R.business_id AND R.stars >= 4
+        LIMIT 1) as high_rating_review_text,
+        (SELECT R.text
+        FROM MostPopularRestaurants MPR
+        WHERE MPR.business_id = R.business_id AND R.stars >= 2 AND R.stars <= 3
+        LIMIT 1) as mid_rating_review_text,
+        (SELECT R.text
+        FROM MostPopularRestaurants MPR
+        WHERE MPR.business_id = R.business_id AND R.stars <= 1
+        LIMIT 1) as low_rating_review_text
+    FROM Reviews R JOIN MostPopularRestaurants MPR ON MPR.business_id = R.business_id
+    GROUP BY R.business_id;
     `
     , (err, data) => {
     if (err || data.length === 0) {
