@@ -340,6 +340,141 @@ const outstanding_restaurants = async function(req, res) {
   });
 }
 
+// Route 9: GET /most_varied_restaurants
+const most_varied_restaurants = async function(req, res) {
+  connection.query(`
+
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
+// Route 10: GET /best_restaurants_per_category
+const best_restaurants_per_category = async function(req, res) {
+  const category = req.query.category ?? '';
+  const type = req.query.type ?? '';
+
+  if (category === '') {
+    if (type === '') {
+      connection.query(`
+        WITH RankedRestaurants AS (
+          SELECT R.name,
+                R.address,
+                R.cat_1,
+                AVG(Rev.stars) AS average_rating,
+                ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
+          FROM Restaurants R
+          JOIN Reviews Rev ON R.business_id = Rev.business_id
+          GROUP BY R.business_id
+        )
+
+        SELECT name, address, cat_1, average_rating
+        FROM RankedRestaurants
+        WHERE ranking <= 5;
+        `
+        , (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+    } else {
+      connection.query(`
+        WITH RankedRestaurants AS (
+          SELECT R.name,
+                R.address,
+                R.cat_1,
+                AVG(Rev.stars) AS average_rating,
+                ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
+          FROM Restaurants R
+          JOIN Reviews Rev ON R.business_id = Rev.business_id
+          WHERE EXISTS (SELECT *
+                        FROM Nearby N
+                        JOIN Attractions A ON N.attraction_id = A.attraction_id
+                        WHERE N.business_id = R.business_id AND A.type = '${type}' AND N.distance < 2.0)
+          GROUP BY R.business_id
+        )
+    
+        SELECT name, address, cat_1, average_rating
+        FROM RankedRestaurants
+        WHERE ranking <= 5;
+        `
+        , (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+    }
+  } else {
+    if (type === '') {
+      connection.query(`
+      WITH RankedRestaurants AS (
+        SELECT R.name,
+               R.address,
+               R.cat_1,
+               AVG(Rev.stars) AS average_rating,
+               ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
+        FROM Restaurants R
+        JOIN Reviews Rev ON R.business_id = Rev.business_id
+        GROUP BY R.business_id
+      )
+
+        SELECT name, address, cat_1, average_rating
+        FROM RankedRestaurants
+        WHERE ranking <= 5 AND cat_1 = '${category}';
+        `
+        , (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+    } else {
+      connection.query(`
+      WITH RankedRestaurants AS (
+        SELECT R.name,
+              R.address,
+              R.cat_1,
+              AVG(Rev.stars) AS average_rating,
+              ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars) DESC) AS ranking
+        FROM Restaurants R
+        JOIN Reviews Rev ON R.business_id = Rev.business_id
+        WHERE EXISTS (SELECT *
+                      FROM Nearby N
+                      JOIN Attractions A ON N.attraction_id = A.attraction_id
+                      WHERE N.business_id = R.business_id AND A.type = '${type}' AND N.distance < 2.0)
+        GROUP BY R.business_id
+      )
+
+      SELECT name, address, cat_1, average_rating
+      FROM RankedRestaurants
+      WHERE ranking <= 5 AND cat_1 = '${category}';
+      `
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+    }
+  }
+}
+
 module.exports = {
   random_restaurant,
   attractions,
@@ -349,4 +484,6 @@ module.exports = {
   attraction_info,
   most_popular_restaurants,
   outstanding_restaurants,
+  most_varied_restaurants,
+  best_restaurants_per_category,
 }

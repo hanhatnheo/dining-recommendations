@@ -18,6 +18,8 @@ app.get('/restaurant_info/:name', routes.restaurant_info);
 app.get('/attraction_info/:name', routes.attraction_info);
 app.get('/most_popular_restaurants', routes.most_popular_restaurants);
 app.get('/outstanding_restaurants', routes.outstanding_restaurants);
+app.get('/most_varied_restaurants', routes.most_varied_restaurants);
+app.get('/best_restaurants_per_category', routes.best_restaurants_per_category);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
