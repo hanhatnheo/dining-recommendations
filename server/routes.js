@@ -278,6 +278,27 @@ const attraction_info = async function(req, res) {
   });
 }
 
+// Route 7: GET /most_popular_restaurants
+const most_popular_restaurants = async function(req, res) {
+  const name = req.params.name;
+
+  connection.query(`
+    SELECT RES.name, RES.address, RES.stars, COUNT(*) AS review_count
+    FROM Reviews REV JOIN Restaurants RES ON REV.business_id = RES.business_id
+    GROUP BY RES.business_id
+    ORDER BY review_count DESC
+    LIMIT 100;
+    `
+    , (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json([]);
+    } else {
+      res.json(data);
+    }
+  });
+}
+
 module.exports = {
   random_restaurant,
   attractions,
@@ -285,4 +306,5 @@ module.exports = {
   all_restaurants,
   restaurant_info,
   attraction_info,
+  most_popular_restaurants,
 }
