@@ -631,6 +631,139 @@ const attractions_within_bounds = async function(req, res) {
   });
 }
 
+// Route 14: GET /all_restaurants/current
+const restaurants_within_bounds = async function(req, res) {
+  const name = req.query.name ?? '';
+  const rating = req.query.rating ?? 0;
+  const drinkScore = req.query.drink_score ?? -25;
+  const valueScore = req.query.value_score ?? -25;
+  const foodScore = req.query.food_score ?? -25;
+  const serviceScore = req.query.service_score ?? -25;
+  const category = req.query.category ?? '';
+  const zipcode = req.query.zipcode ?? '';
+  const minLat = req.query.minLat;
+  const minLng = req.query.minLng;
+  const maxLat = req.query.maxLat;
+  const maxLng = req.query.maxLng;
+
+  if (name === '') {
+    if (category === '') {
+      connection.query(`
+        WITH ReviewsWithTheirRestaurants AS (
+        SELECT RES.business_id, REV.stars, REV.text
+        FROM Restaurants RES
+        JOIN Reviews REV ON RES.business_id = REV.business_id)
+        
+        SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars >= 4
+              LIMIT 1) as high_rating_review_text,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars >= 2
+                AND stars <= 3
+              LIMIT 1) as mid_rating_review_text,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars <= 1
+              LIMIT 1) as mid_rating_review_text
+        FROM Restaurants R
+        WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
+          R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
+          R.service_score >= '${serviceScore}' AND R.address LIKE '%${zipcode}'
+          AND R.latitude BETWEEN '${minLat}' AND '${maxLat}' AND R.longitude BETWEEN '${minLng}' AND '${maxLng}';
+        `
+        , (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+          }
+        });
+      } else {
+        connection.query(`
+        WITH ReviewsWithTheirRestaurants AS (
+        SELECT RES.business_id, REV.stars, REV.text
+        FROM Restaurants RES
+        JOIN Reviews REV ON RES.business_id = REV.business_id)
+        
+        SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars >= 4
+              LIMIT 1) as high_rating_review_text,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars >= 2
+                AND stars <= 3
+              LIMIT 1) as mid_rating_review_text,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars <= 1
+              LIMIT 1) as mid_rating_review_text
+        FROM Restaurants R
+        WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
+          R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
+          R.service_score >= '${serviceScore}' AND (R.cat_1 LIKE '%${category}%' OR 
+          R.cat_2 LIKE '%${category}%' OR R.cat_3 LIKE '%${category}%') AND 
+          R.address LIKE '%${zipcode}' AND R.latitude BETWEEN '${minLat}' AND '${maxLat}' AND R.longitude BETWEEN '${minLng}' AND '${maxLng}'
+          ;
+        `
+        , (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+          }
+        });
+      }
+  } else {
+    connection.query(`
+      WITH ReviewsWithTheirRestaurants AS (
+      SELECT RES.business_id, REV.stars, REV.text
+      FROM Restaurants RES
+      JOIN Reviews REV ON RES.business_id = REV.business_id)
+    
+      SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
+            (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars >= 4
+              LIMIT 1) as high_rating_review_text,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars >= 2
+                AND stars <= 3
+              LIMIT 1) as mid_rating_review_text,
+              (SELECT RWR.text
+              FROM ReviewsWithTheirRestaurants RWR
+              WHERE R.business_id = RWR.business_id
+                AND stars <= 1
+              LIMIT 1) as mid_rating_review_text
+      FROM Restaurants R
+      WHERE R.name = '${name}' AND R.address LIKE '%${zipcode}' AND R.latitude BETWEEN '${minLat}' AND '${maxLat}' AND R.longitude BETWEEN '${minLng}' AND '${maxLng}';
+      `
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+  }
+}
+
 module.exports = {
   random_restaurant,
   random_attraction,
@@ -644,5 +777,6 @@ module.exports = {
   best_restaurants_per_category,
   recommended_restaurants,
   zipcode_ranking,
-  attractions_within_bounds
+  attractions_within_bounds,
+  restaurants_within_bounds
 }

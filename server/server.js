@@ -23,6 +23,7 @@ app.get('/best_restaurants_per_category', routes.best_restaurants_per_category);
 app.get('/recommended_restaurants', routes.recommended_restaurants);
 app.get('/zipcode_ranking', routes.zipcode_ranking);
 app.get('/attractions/current', routes.attractions_within_bounds);
+app.get('/all_restaurants/current', routes.restaurants_within_bounds);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

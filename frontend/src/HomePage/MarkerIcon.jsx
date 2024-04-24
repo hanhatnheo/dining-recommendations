@@ -22,4 +22,7 @@ export const MarkerIcon = () => (
     </svg>
   );
 
+export const RestaurantIcon = ({ src }) => (
+    <img src={src} alt="Marker Icon" style={{ width: 35, height: 56 }} />
+  );
   
