@@ -9,6 +9,8 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX;
 const MAP_CONFIG = {
   minZoom: 5,
   maxZoom: 20,
+  longitude: -100,
+  latitude: 40,
   mapStyle: "mapbox://styles/mapbox/light-v9",
   mapboxAccessToken: MAPBOX_TOKEN
 };
