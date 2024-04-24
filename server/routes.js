@@ -21,10 +21,14 @@ const random_restaurant = async function(req, res) {
 
   // Here is a complete example of how to query the database in JavaScript.
   // Only a small change (unrelated to querying) is required for TASK 3 in this route.
+
+  const sizeRestaurants = 9963;
+  const seed = Math.floor(Math.random() * sizeRestaurants);
+
   connection.query(`
     SELECT *
     FROM Restaurants
-    LIMIT 1
+    LIMIT 1 OFFSET ${seed}
   `, (err, data) => {
     if (err || data.length === 0) {
       // If there is an error for some reason, or if the query is empty (this should not be possible)
@@ -47,6 +51,10 @@ const random_restaurant = async function(req, res) {
 
 // Route 2: GET /random_attraction
 const random_attraction = async function(req, res) {
+
+  const sizeAttractions = 46875;
+  const seed = Math.floor(Math.random() * sizeAttractions);
+
   connection.query(`
     SELECT *
     FROM Attractions
@@ -54,7 +62,8 @@ const random_attraction = async function(req, res) {
       OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
       OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
       OR type = 'attraction'
-    LIMIT 1
+    LIMIT 1 OFFSET ${seed}
+
   `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
@@ -117,6 +126,7 @@ const restaurant_recommendations = async function(req, res) {
   const valueScore = req.query.value_score ?? -25;
   const foodScore = req.query.food_score ?? -25;
   const serviceScore = req.query.service_score ?? -25;
+  const numRecs = req.query.num_recs ?? 20;
   
   connection.query(`
     SELECT R.name, R.stars, R.address, R.latitude, R.longitude
@@ -127,7 +137,7 @@ const restaurant_recommendations = async function(req, res) {
     R.food_score >= '${foodScore}' AND R.service_score >= '${serviceScore}'
     AND distance <= '${distance}'
     ORDER BY distance
-    LIMIT 20;
+    LIMIT ${numRecs};
     `
     , (err, data) => {
     if (err || data.length === 0) {
