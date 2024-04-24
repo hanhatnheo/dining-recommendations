@@ -1,7 +1,7 @@
 import { UseMap } from "./UseMap";
 import { Marker } from "react-map-gl";
 import { useState, useEffect, useCallback } from "react";
-import config from '/Users/nhathapt/Documents/GitHub/dining-recommendations/server/config.json';
+import config from 'server/config.json';
 import { MarkerIcon } from './MarkerIcon';
 
 import axios from 'axios';
@@ -20,7 +20,8 @@ export const Markers = () => {
             const maxLng = parseFloat(boundsArray[1][0]);
             const maxLat = parseFloat(boundsArray[1][1]);
             const response = await axios.get(`${URLPREFIX}attractions/current`, {
-                params: { minLat, minLng, maxLat, maxLng }
+                params: { minLat, minLng, maxLat, maxLng },
+                mode: 'no-cors'
             });
           setMarkers(response.data);
           console.log(response.data); 
