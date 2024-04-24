@@ -239,9 +239,54 @@ const all_restaurants = async function(req, res) {
   }
 }
 
+// Route 5: GET /attractions/current
+const attractions_within_bounds = async function(req, res) {
+  const type = req.query.type ?? '';
+  const minLat = req.query.minLat;
+  const minLng = req.query.minLng;
+  const maxLat = req.query.maxLat;
+  const maxLng = req.query.maxLng;
+
+  if (!minLat || !minLng || !maxLat || !maxLng) {
+    return res.status(400).json({ error: "Missing latitude or longitude parameters" });
+  }
+
+  let baseQuery = `
+    SELECT name, type, latitude, longitude
+    FROM Attractions
+    WHERE latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?
+  `;
+
+  let queryParams = [minLat, maxLat, minLng, maxLng];
+
+  if (type !== '') {
+    baseQuery += ` AND type = ?`;
+    queryParams.push(type);
+  } else {
+    baseQuery += ` AND (type = 'viewpoint' OR type = 'museum' OR type = 'park'
+                         OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
+                         OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
+                         OR type = 'attraction')`;
+  }
+
+  connection.query(baseQuery, queryParams, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Database query failed" });
+    }
+    if (data.length === 0) {
+      return res.json([]); 
+    }
+    res.json(data);
+  });
+}
+
+
+
 module.exports = {
   random_restaurant,
   attractions,
   restaurant_recommendations,
   all_restaurants,
+  attractions_within_bounds
 }

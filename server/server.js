@@ -14,6 +14,7 @@ app.get('/random_restaurant', routes.random_restaurant);
 app.get('/attractions', routes.attractions);
 app.get('/restaurant_recommendations/:name', routes.restaurant_recommendations);
 app.get('/all_restaurants', routes.all_restaurants);
+app.get('/attractions/current', routes.attractions_within_bounds);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
