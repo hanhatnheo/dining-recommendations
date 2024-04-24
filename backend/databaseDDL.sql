@@ -1,7 +1,6 @@
 CREATE DATABASE recommendations_DB;
 USE recommendations_DB;
 
-
 CREATE TABLE Restaurants(
     business_id varchar(255),
     name varchar(255),
@@ -16,6 +15,7 @@ CREATE TABLE Restaurants(
     value_score DECIMAL(20, 15),
     food_score DECIMAL(20, 15),
     service_score DECIMAL(20, 15),
+    review_count int(10),
     PRIMARY KEY (business_id)
 );
 
@@ -35,6 +35,7 @@ CREATE TABLE Attractions(
     type varchar(255),
     attraction_id varchar(255),
     address varchar(255),
+    website varchar(255),
     PRIMARY KEY (attraction_id)
 );
 
