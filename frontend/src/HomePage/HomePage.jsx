@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import ReactMapGL, { NavigationControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+//import ZipCodeBox from './ZipCodeBox'; // Make sure the path is correct
+import Navbar from './Navbar';
 import { Markers } from './Markers';
 import { Restaurants } from './Restaurants';
 
@@ -23,15 +25,17 @@ export default function App() {
     const mapContainerRef = React.useRef(null);
     
     return (
-      <div ref={mapContainerRef} className="map">
-        <ReactMapGL
-          ref={mapRef}
-          {...MAP_CONFIG}
-        >
-          <NavigationControl className="navigation-control" showCompass={false} />
-          <Markers />
-
-        </ReactMapGL>
+      <div>
+        <Navbar /> {/* Render the navigation bar */}
+        <div ref={mapContainerRef} className="map">
+          <ReactMapGL
+            ref={mapRef}
+            {...MAP_CONFIG}
+          >
+            <NavigationControl className="navigation-control" showCompass={false} />
+            <Markers />
+          </ReactMapGL>
+        </div>
       </div>
     );
   };
