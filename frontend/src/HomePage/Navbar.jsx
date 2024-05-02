@@ -46,13 +46,13 @@ return (
       <div style={brandStyles}>Penn Eats</div>
       <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
         <li>
-          <Link to="/restaurants" style={linkStyles}>
-            All Restaurants
+          <Link to="/" style={linkStyles}>
+            Map
           </Link>
         </li>
         <li>
-          <a href="#" style={linkStyles}>
-            Leaderboards
+          <a href="/restaurants" style={linkStyles}>
+            Search Restaurants
           </a>
         </li>
       </ul>
