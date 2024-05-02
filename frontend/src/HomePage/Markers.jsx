@@ -8,6 +8,10 @@ import axios from 'axios';
 
 const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
 
+//state variables for Popup.jsx
+//const [selectedMarker, setSelectedMarker] = useState(null);
+//const [popupPosition, setPopupPosition] = useState(null);
+
 export const Markers = () => {
     const { bounds } = UseMap();
     const [markers, setMarkers] = useState([]);
@@ -35,7 +39,37 @@ export const Markers = () => {
         fetchDataInBounds(bounds);
     }, [bounds])
 
-    
+    //updated return with Popup interactivity
+    /*
+    return (
+        <>
+          {markers.map(({ ...marker }) => {
+            return (
+              <Marker
+                key={marker.attraction_id}
+                latitude={marker.latitude}
+                longitude={marker.longitude}
+                offsetLeft={-17.5}
+                offsetTop={-38}
+                onClick={(e) => {
+                  setSelectedMarker(marker);
+                  setPopupPosition([marker.longitude, marker.latitude]);
+                }}
+              >
+                <MarkerIcon />
+              </Marker>
+            );
+          })}
+          {selectedMarker && (
+            <Popup
+              marker={selectedMarker}
+              position={popupPosition}
+              onClose={() => setSelectedMarker(null)}
+            />
+          )}
+        </>
+      );
+      */
     return (
         <>
         {markers.map(({ ...marker }) => {

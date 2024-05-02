@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const navbarStyles = {
@@ -17,7 +18,6 @@ const Navbar = () => {
     fontSize: '18px',
   };
 
-
   //maybe replace this with logo image later
   const brandStyles = {
     color: '#fff',
@@ -26,14 +26,29 @@ const Navbar = () => {
     fontWeight: 'bold',
   };
 
+  /*
   return (
+    <AppBar position='static'>
+      <Container maxWidth='xl'>
+        <Toolbar disableGutters>
+          <NavText href='/' text='PennEats' isMain />
+          <NavText href='/restaurants' text='All Restaurants' />
+        </Toolbar>
+      </Container>
+    </AppBar>
+  );
+}
+<NavText href='/songs' text='SONGS' /> this goes under 'All Restaurants'
+*/
+            
+return (
     <nav style={navbarStyles}>
       <div style={brandStyles}>Penn Eats</div>
       <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
         <li>
-          <a href="#" style={linkStyles}>
+          <Link to="/restaurants" style={linkStyles}>
             All Restaurants
-          </a>
+          </Link>
         </li>
         <li>
           <a href="#" style={linkStyles}>
