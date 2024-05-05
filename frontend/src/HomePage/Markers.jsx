@@ -1,17 +1,21 @@
 import { UseMap } from "./UseMap";
-import { Marker, Popup } from "react-map-gl";
+import { Marker, Popup, useMap } from "react-map-gl";
 import { useState, useEffect, useCallback } from "react";
 import config from '../../../server/config.json';
 import { MarkerIcon } from './MarkerIcon';
 
 import axios from 'axios';
+import './Markers.css';
 
 const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
 
 export const Markers = () => {
     const { bounds } = UseMap();
     const [markers, setMarkers] = useState([]);
-    const [selectedMarker, setSelectedMarker] = useState(null);
+    const [selectedMarkers, setSelectedMarkers] = useState([]);
+    const [zoom, setZoom] = useState(5);
+
+    const { current: map } = useMap();
 
 
     const fetchDataInBounds = useCallback(async (bounds) => {
@@ -25,7 +29,7 @@ export const Markers = () => {
                 params: { minLat, minLng, maxLat, maxLng },
                 mode: 'no-cors'
             });
-          setMarkers(response.data);
+          setMarkers(response.data.slice(0, zoom * 40));
           console.log(response.data); 
         } catch (error) {
           console.error('Error fetching attractions', error);
@@ -33,47 +37,50 @@ export const Markers = () => {
        }, [bounds]);
 
     const handleMarkerClick = (marker) => {
-        setSelectedMarker(marker);
+        setSelectedMarkers(selectedMarkers.concat(marker));
     };
 
     useEffect(() => {
-        console.log(selectedMarker)
-    }, [selectedMarker])
+        console.log(selectedMarkers)
+    }, [selectedMarkers])
 
     useEffect(() => {
         fetchDataInBounds(bounds);
     }, [bounds]);
 
+    useEffect(() => {
+        if (map) {
+            setZoom(map.getZoom());
+        }
+    }, [map, map.getZoom()]);
+
     return (
         <>
-        {markers.map(({ ...marker }) => {
-            return(
-            <Marker onClick={(event) => {
-                handleMarkerClick(marker)
-            }} key={marker.attraction_id} latitude={marker.latitude} longitude={marker.longitude} offsetLeft={-17.5} offsetTop={-38}>
-            <MarkerIcon />
-            </Marker>
-        )}
+            {markers.map(({ ...marker }) => {
+                return(
+                    <Marker onClick={(event) => {
+                        handleMarkerClick(marker)
+                    }} key={marker.attraction_id} latitude={marker.latitude} longitude={marker.longitude} offsetLeft={-17.5} offsetTop={-38}>
+                    <MarkerIcon />
+                    </Marker>
+                )}
             )}
-            {
-            selectedMarker ? (
-                
+            {selectedMarkers.map((selectedMarker) => (
                 <Popup
                     key={selectedMarker.key}
                     latitude={selectedMarker.latitude}
                     longitude={selectedMarker.longitude}
-                    closeOnClick={true}
                     offsetTop={-20}
-                    offsetLeft={20}
+                    offsetLeft={-20}
                     closeButton={true}
-                    onClose={() => setSelectedMarker(null)}
+                    onClose={() => setSelectedMarkers(selectedMarkers.filter(marker => marker.type !== selectedMarker.key && marker.name !== selectedMarker.name && marker.latitude !== selectedMarker.latitude && marker.longitude !== selectedMarker.longitude))}
+                    closeOnClick={false}
                     anchor="top">
-                        <div style={{ background: 'white', padding: '10px', borderRadius: '10px' }}>
+                        <div style={{ padding: '10px', borderRadius: '10px', color: 'black' }}>
                             <h3>{selectedMarker.name}</h3>
-                            "Hello World"
                         </div>
                 </Popup>
-            ) : null}
+            ))}
         </>
     )
 }

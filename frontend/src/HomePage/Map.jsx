@@ -7,7 +7,7 @@ import { Restaurants } from './Restaurants';
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX; 
 
 const MAP_CONFIG = {
-  minZoom: 5,
+  minZoom: 0,
   maxZoom: 20,
   mapStyle: "mapbox://styles/mapbox/light-v9",
   mapboxAccessToken: MAPBOX_TOKEN
@@ -34,7 +34,7 @@ const Map = () => {
             <NavigationControl className="navigation-control" showCompass={false} />
             <Markers />
             
-            {/* <Restaurants /> */}
+            <Restaurants />
           </ReactMapGL>
         </div>
       </div>
