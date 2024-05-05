@@ -19,7 +19,8 @@ const random_restaurant = async function(req, res) {
     SELECT name, stars AS rating, address
     FROM Restaurants R
     WHERE R.latitude BETWEEN -100 AND 100 AND R.longitude BETWEEN -100 AND 100 
-    LIMIT 1 OFFSET 52;
+    ORDER by RAND()
+    LIMIT 1 
   `, (err, data) => {
     if (err || data.length === 0) {
       // If there is an error for some reason, or if the query is empty
