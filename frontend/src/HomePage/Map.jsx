@@ -28,7 +28,7 @@ const Map = () => {
             initialViewState={{
                 longitude: -100,
                 latitude: 40,
-                zoom: 5,
+                zoom: 9,
               }}
           >
             <NavigationControl className="navigation-control" showCompass={false} />

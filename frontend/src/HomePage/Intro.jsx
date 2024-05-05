@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import config from '../../../server/config.json';
+
+const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
 
 const Intro = () => {
   const [zipCode, setZipCode] = useState('');
@@ -11,7 +15,7 @@ const Intro = () => {
     return regex.test(input);
   };
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!zipCode) {
       setError('Zip code cannot be empty.');
       return;
@@ -21,12 +25,24 @@ const Intro = () => {
       return;
     }
     setError('');
-    navigate('/home', { state: { zipCode } });  // Navigate and pass zip code
+
+    // Fetch coordinates from the server using zip_generator
+    try {
+      const response = await axios.get(`${URLPREFIX}zip_generator/${zipCode}`);
+      if (response.data) {
+        navigate('/home', { state: { coordinates: response.data } });
+      } else {
+        throw new Error('No data returned');
+      }
+    } catch (error) {
+      console.error('Error fetching coordinates', error);
+      setError('Failed to fetch coordinates. Please try again.');
+    }
   };
 
   return (
     <div className="intro-page">
-      <h1>Welcome to Penn Eats!</h1>
+      <h1>Welcome to Our Map App!</h1>
       <div className="search-bar">
         <input
           type="text"
