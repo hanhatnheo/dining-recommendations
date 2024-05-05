@@ -5,87 +5,141 @@ import {
   Container,
   FormControlLabel,
   Grid,
-  TextField,
+  Link,
   Slider,
+  TextField,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Navbar from './Navbar';
 import config from '../../../server/config.json';
 
-export default function RestaurantPage() {
+export default function SongsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
+  const [selectedSongId, setSelectedSongId] = useState(null);
 
-  const [name, setName] = useState('');
-  const [stars, setStars] = useState([0, 5]);
-  const [foodQuality, setFoodQuality] = useState([-25, 25]);
-  const [drinkQuality, setDrinkQuality] = useState([-25, 25]);
-  const [serviceQuality, setServiceQuality] = useState([-25, 25]);
-  const [valuePerDollar, setValuePerDollar] = useState([-25, 25]);
-  const [distance, setDistance] = useState([0, 50]); // Assuming distance in km or miles as suitable
+  const [title, setTitle] = useState('');
+  const [duration, setDuration] = useState([60, 660]);
+  const [plays, setPlays] = useState([0, 1000000000]);
+  const [danceability, setDanceability] = useState([0, 1]);
+  const [energy, setEnergy] = useState([0, 1]);
+  const [valence, setValence] = useState([0, 1]);
+  const [explicit, setExplicit] = useState(false);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/search_restaurants`)
+    fetch(`http://${config.server_host}:${config.server_port}/search_songs`)
       .then(res => res.json())
       .then(resJson => {
-        const restaurantsWithId = resJson.map(restaurant => ({ id: restaurant.restaurant_id, ...restaurant }));
-        setData(restaurantsWithId);
+        const songsWithId = resJson.map(song => ({ id: song.song_id, ...song }));
+        setData(songsWithId);
       });
   }, []);
 
   const search = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/search_restaurants?name=${name}` +
-      `&stars_low=${stars[0]}&stars_high=${stars[1]}` +
-      `&foodQuality_low=${foodQuality[0]}&foodQuality_high=${foodQuality[1]}` +
-      `&drinkQuality_low=${drinkQuality[0]}&drinkQuality_high=${drinkQuality[1]}` +
-      `&serviceQuality_low=${serviceQuality[0]}&serviceQuality_high=${serviceQuality[1]}` +
-      `&valuePerDollar_low=${valuePerDollar[0]}&valuePerDollar_high=${valuePerDollar[1]}` +
-      `&distance_low=${distance[0]}&distance_high=${distance[1]}`
+    fetch(`http://${config.server_host}:${config.server_port}/search_songs?title=${title}` +
+      `&duration_low=${duration[0]}&duration_high=${duration[1]}` +
+      `&plays_low=${plays[0]}&plays_high=${plays[1]}` +
+      `&danceability_low=${danceability[0]}&danceability_high=${danceability[1]}` +
+      `&energy_low=${energy[0]}&energy_high=${energy[1]}` +
+      `&valence_low=${valence[0]}&valence_high=${valence[1]}` +
+      `&explicit=${explicit}`
     )
       .then(res => res.json())
       .then(resJson => {
-        const restaurantsWithId = resJson.map(restaurant => ({ id: restaurant.restaurant_id, ...restaurant }));
-        setData(restaurantsWithId);
+        const songsWithId = resJson.map(song => ({ id: song.song_id, ...song }));
+        setData(songsWithId);
       });
   }
 
   const columns = [
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'stars', headerName: 'Stars', width: 100 },
-    { field: 'foodQuality', headerName: 'Food Quality', width: 150 },
-    { field: 'drinkQuality', headerName: 'Drink Quality', width: 150 },
-    { field: 'serviceQuality', headerName: 'Service Quality', width: 150 },
-    { field: 'valuePerDollar', headerName: 'Value Per Dollar', width: 150 },
+    { field: 'stars', headerName: 'Stars', width: 100, valueFormatter: ({ value }) => `${Math.floor(value / 60)}:${value % 60 < 10 ? '0' : ''}${value % 60}`},
+    { field: 'foodQ', headerName: 'Food Quality', width: 200},
+    { field: 'drinkQ', headerName: 'Drink Quality', width: 200 },
+    { field: 'serviceQ', headerName: 'Service Quality', width: 200 },
+    { field: 'valuePerD', headerName: 'Value Per Dollar', width: 150 },
     { field: 'distance', headerName: 'Distance', width: 100 },
   ];
 
   return (
     <div>
-      <Navbar />
+      <Navbar /> {/* This will place the Navbar at the top */}
       <Container>
         <h2>Search for Restaurants</h2>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <TextField
-              label="Restaurant Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               fullWidth
             />
           </Grid>
-          {['Stars', 'Food Quality', 'Drink Quality', 'Service Quality', 'Value Per Dollar', 'Distance'].map((item, index) => (
-            <Grid item xs={4} key={index}>
-              <Slider
-                value={eval(item.toLowerCase().replace(/ /g, ''))}
-                onChange={(e, newValue) => eval(`set${item.replace(/ /g, '')}(newValue)`)}
-                valueLabelDisplay="auto"
-                min={item === 'Stars' ? 0 : item === 'Distance' ? 0 : -25}
-                max={item === 'Stars' ? 5 : item === 'Distance' ? 50 : 25}
-                aria-labelledby={`${item.toLowerCase().replace(/ /g, '')}-slider`}
-              />
-              <p>{item}</p>
-            </Grid>
-          ))}
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={<Checkbox checked={explicit} onChange={(e) => setExplicit(e.target.checked)} />}
+              label="Explicit"
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={duration}
+              onChange={(e, newValue) => setDuration(newValue)}
+              valueLabelDisplay="auto"
+              valueLabelFormat={value => `${Math.floor(value / 60)}m ${value % 60}s`}
+              min={60}
+              max={660}
+              aria-labelledby="duration-slider"
+            />
+            <p>Duration Range</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={plays}
+              onChange={(e, newValue) => setPlays(newValue)}
+              valueLabelDisplay="auto"
+              valueLabelFormat={(value) => `${(value / 1000000).toFixed(1)}M`}
+              min={0}
+              max={1100000000}
+              aria-labelledby="plays-slider"
+            />
+            <p>Plays Range (Millions)</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={danceability}
+              onChange={(e, newValue) => setDanceability(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1}
+              step={0.1}
+              aria-labelledby="danceability-slider"
+            />
+            <p>Danceability</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={energy}
+              onChange={(e, newValue) => setEnergy(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1}
+              step={0.1}
+              aria-labelledby="energy-slider"
+            />
+            <p>Energy</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={valence}
+              onChange={(e, newValue) => setValence(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1}
+              step={0.1}
+              aria-labelledby="valence-slider"
+            />
+            <p>Valence</p>
+          </Grid>
           <Grid item xs={12}>
             <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
               Search
