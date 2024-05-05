@@ -471,18 +471,18 @@ const best_restaurants_per_category = async function(req, res) {
   const zipcode = req.query.zip_code ?? '';
 
       connection.query(`
-        WITH RankedRestaurants AS (
-        SELECT R.business_id, R.name, R.address,
+      WITH RankedRestaurants AS (
+        SELECT /*+ NO_INDEX(zip_restaurants) */ 
+        DISTINCT R.business_id, 
+        R.name,
+        R.address,
         R.cat_1,
-        R.stars,
-        ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars)
-        DESC) AS ranking
-        FROM Restaurants R JOIN Reviews Rev ON R.business_id = Rev.business_id
-        AND R.zip_code = '${zipcode}'
-        GROUP BY R.business_id
-        )
-        SELECT DISTINCT business_id, name, address, cat_1, stars FROM RankedRestaurants
-        WHERE ranking <= 5;
+        R.stars, ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY R.stars) AS ranking
+        FROM Restaurants R
+        WHERE R.zip_code = '${zipcode}')
+        SELECT DISTINCT business_id, name, address, cat_1, stars
+        FROM RankedRestaurants
+        WHERE ranking <= 5
         `
         , (err, data) => {
         if (err || data.length === 0) {
