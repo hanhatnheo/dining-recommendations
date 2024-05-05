@@ -16,17 +16,25 @@ const MAP_CONFIG = {
 const Map = () => {
     const mapRef = React.useRef(null);
     const mapContainerRef = React.useRef(null);
+
     
     return (
       <div style={{ width: "100%", height: "98vh" }}>
         <div ref={mapContainerRef} className="map">
           <ReactMapGL
             ref={mapRef}
+            interactive
             {...MAP_CONFIG}
+            initialViewState={{
+                longitude: -100,
+                latitude: 40,
+                zoom: 5,
+              }}
           >
             <NavigationControl className="navigation-control" showCompass={false} />
             <Markers />
-            <Restaurants />
+            
+            {/* <Restaurants /> */}
           </ReactMapGL>
         </div>
       </div>

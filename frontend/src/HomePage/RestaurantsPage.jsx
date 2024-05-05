@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import config from '/Users/jamesh/dining-recommendations/server/config.json';
+import config from '../../../server/config.json';
 
 export default function SongsPage() {
   const [pageSize, setPageSize] = useState(10);

@@ -117,9 +117,9 @@ const attractions = async function(req, res) {
   }
 }
 
-// Route 4: GET /restaurant_recommendations/:name
+// Route 4: GET /restaurant_recommendations/:id
 const restaurant_recommendations = async function(req, res) {
-  const name = req.params.name;
+  const id = req.params.id;
   const distance = req.query.distance ?? 23;
   const rating = req.query.rating ?? 0;
   const drinkScore = req.query.drink_score ?? -25;
@@ -132,7 +132,7 @@ const restaurant_recommendations = async function(req, res) {
     SELECT R.name, R.stars, R.address, R.latitude, R.longitude
     FROM Attractions A JOIN Nearby N ON A.attraction_id = N.attraction_id
     JOIN Restaurants R ON N.business_id = R.business_id
-    WHERE A.name = '${name}' AND R.stars >= '${rating}' AND 
+    WHERE A.attraction_id = '${id}' AND R.stars >= '${rating}' AND 
     R.drink_score >= '${drinkScore}' AND R.value_score >= '${valueScore}' AND
     R.food_score >= '${foodScore}' AND R.service_score >= '${serviceScore}'
     AND distance <= '${distance}'
@@ -276,14 +276,14 @@ const all_restaurants = async function(req, res) {
   }
 }
 
-// Route 6: GET /restaurant_info/:name
+// Route 6: GET /restaurant_info/:id
 const restaurant_info = async function(req, res) {
-  const name = req.params.name;
+  const id = req.params.id;
 
   connection.query(`
     SELECT *
     FROM Restaurants RES JOIN Reviews REV ON RES.business_id = REV.business_id
-    WHERE RES.name = '${name}'
+    WHERE RES.business_id = '${id}'
     LIMIT 100;
     `
     , (err, data) => {
@@ -296,14 +296,14 @@ const restaurant_info = async function(req, res) {
   });
 }
 
-// Route 7: GET /attraction_info/:name
+// Route 7: GET /attraction_info/:id
 const attraction_info = async function(req, res) {
-  const name = req.params.name;
+  const id = req.params.id;
 
   connection.query(`
     SELECT *
     FROM Attractions
-    WHERE name = '${name}';
+    WHERE attraction_id = '${id}';
     `
     , (err, data) => {
     if (err || data.length === 0) {

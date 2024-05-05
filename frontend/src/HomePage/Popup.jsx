@@ -4,8 +4,6 @@ import { Popup as MapboxPopup } from 'react-map-gl';
 const Popup = ({ marker, onClose, position }) => {
   return (
     <MapboxPopup
-      longitude={position[0]}
-      latitude={position[1]}
       offsetTop={-20}
       offsetLeft={20}
       onClose={onClose}
