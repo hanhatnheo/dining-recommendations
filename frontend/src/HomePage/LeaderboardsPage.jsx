@@ -138,6 +138,9 @@ export default function LeaderboardsPage() {
           value={zipCodeFilter}
           onChange={(e) => setZipCodeFilter(e.target.value)}
           style={{ marginBottom: '20px' }}
+          InputProps={{
+            style: { backgroundColor: 'white', borderRadius: '4px' }, // Set background color and border radius
+          }}
         />
         <Button onClick={getPopularRestaurants} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
           Search
