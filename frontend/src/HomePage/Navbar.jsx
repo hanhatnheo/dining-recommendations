@@ -40,24 +40,29 @@ const Navbar = () => {
 }
 <NavText href='/songs' text='SONGS' /> this goes under 'All Restaurants'
 */
-            
 return (
-    <nav style={navbarStyles}>
-      <div style={brandStyles}>Penn Eats</div>
-      <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
-        <li>
-          <Link to="/" style={linkStyles}>
-            Map
-          </Link>
-        </li>
-        <li>
-          <a href="/restaurants" style={linkStyles}>
-            Search Restaurants
-          </a>
-        </li>
-      </ul>
-    </nav>
-  );
+  <nav style={navbarStyles}>
+    <div style={brandStyles}>Penn Eats</div>
+    <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
+      <li>
+        <Link to="/home" style={linkStyles}>
+          Map
+        </Link>
+      </li>
+      <li>
+        <Link to="/restaurants" style={linkStyles}>
+          Search Restaurants
+        </Link>
+      </li>
+      <li>
+        <Link to="/leaderboards" style={linkStyles}>
+          Leaderboards
+        </Link>
+      </li>
+    </ul>
+  </nav>
+);
 };
+
 
 export default Navbar;
