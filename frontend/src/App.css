@@ -42,3 +42,41 @@
   width: 100vw;
   height: 100vh;
 }
+
+/* Adding components for Intro.jsx */
+
+.intro-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #351fc3;
+}
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.search-bar input {
+  padding: 8px;
+  width: 300px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
