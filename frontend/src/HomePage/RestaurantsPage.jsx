@@ -25,6 +25,25 @@ export default function SongsPage() {
   const [drinkQ, setDrinkQ] = useState([-25, 25]);
   const [serviceQ, setServiceQ] = useState([-25, 25]);
   const [valuePerD, setValuePerD] = useState([-25, 25]);
+  const [restaurant, setRestaurant] = useState(null); 
+
+  useEffect(() => {
+    fetchRandomRestaurant();
+  }, []);
+
+  const fetchRandomRestaurant = () => {
+    fetch(`http://${config.server_host}:${config.server_port}/random_restaurant`)
+      .then(res => res.json())
+      .then(resJson => {
+        // Extracting variables
+        const { name, rating, address } = resJson;
+        // Setting state with fetched data
+        setRestaurant({ name, rating, address });
+      })
+      .catch(error => {
+        console.error('Error fetching random restaurant:', error);
+      });
+  };
 
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/all_restaurants`)
@@ -163,7 +182,14 @@ export default function SongsPage() {
           rowsPerPageOptions={[5, 10, 25]}
           autoHeight
         />
+        <Grid item xs={12} style={{ marginTop: '20px' }}>
+          {restaurant && (
+          <div style={{ backgroundColor: '#778EBC', borderRadius: '10px', padding: '10px' }}>
+            Restaurant of the day: {restaurant.name}, {restaurant.rating}, {restaurant.address}
+          </div> )}
+        </Grid>
       </Container>
     </div>
+    
   );
 }
