@@ -472,7 +472,7 @@ const best_restaurants_per_category = async function(req, res) {
 
       connection.query(`
         WITH RankedRestaurants AS (
-        SELECT R.name, R.address,
+        SELECT R.business_id, R.name, R.address,
         R.cat_1,
         R.stars,
         ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars)
@@ -481,7 +481,7 @@ const best_restaurants_per_category = async function(req, res) {
         AND R.zip_code = '${zipcode}'
         GROUP BY R.business_id
         )
-        SELECT name, address, cat_1, stars FROM RankedRestaurants
+        SELECT DISTINCT business_id, name, address, cat_1, stars FROM RankedRestaurants
         WHERE ranking <= 5;
         `
         , (err, data) => {
@@ -715,7 +715,7 @@ const restaurants_within_bounds = async function(req, res) {
   }
 }
 
-//Route 15.5: Get restaurants in top 5 zipcodes of all time GET /all_restaurants/zip_code/best
+//Route 14: GET /all_restaurants/zip_code/best
 const best_restaurants_in_top_zipcodes = async function(req, res) { 
   connection.query(`
       WITH Top5ZipCodes AS (
