@@ -10,7 +10,8 @@ import {
   TextField,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import config from '/Users/jamesh/dining-recommendations/server/config.json';
+import Navbar from './Navbar';
+import config from '../../../server/config.json';
 
 export default function SongsPage() {
   const [pageSize, setPageSize] = useState(10);
@@ -62,6 +63,7 @@ export default function SongsPage() {
 
   return (
     <Container>
+      <Navbar /> {/* This will place the Navbar at the top */}
       <h2>Search Songs</h2>
       <Grid container spacing={3}>
         <Grid item xs={12}>

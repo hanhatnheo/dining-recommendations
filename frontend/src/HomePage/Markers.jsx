@@ -1,20 +1,22 @@
 import { UseMap } from "./UseMap";
-import { Marker } from "react-map-gl";
+import { Marker, Popup, useMap } from "react-map-gl";
 import { useState, useEffect, useCallback } from "react";
 import config from '../../../server/config.json';
 import { MarkerIcon } from './MarkerIcon';
 
 import axios from 'axios';
+import './Markers.css';
 
 const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
-
-//state variables for Popup.jsx
-//const [selectedMarker, setSelectedMarker] = useState(null);
-//const [popupPosition, setPopupPosition] = useState(null);
 
 export const Markers = () => {
     const { bounds } = UseMap();
     const [markers, setMarkers] = useState([]);
+    const [selectedMarkers, setSelectedMarkers] = useState([]);
+    const [zoom, setZoom] = useState(5);
+
+    const { current: map } = useMap();
+
 
     const fetchDataInBounds = useCallback(async (bounds) => {
         try {
@@ -27,57 +29,58 @@ export const Markers = () => {
                 params: { minLat, minLng, maxLat, maxLng },
                 mode: 'no-cors'
             });
-          setMarkers(response.data);
+          setMarkers(response.data.slice(0, zoom * 40));
           console.log(response.data); 
         } catch (error) {
           console.error('Error fetching attractions', error);
         }
        }, [bounds]);
 
+    const handleMarkerClick = (marker) => {
+        setSelectedMarkers(selectedMarkers.concat(marker));
+    };
+
+    useEffect(() => {
+        console.log(selectedMarkers)
+    }, [selectedMarkers])
 
     useEffect(() => {
         fetchDataInBounds(bounds);
-    }, [bounds])
+    }, [bounds]);
 
-    //updated return with Popup interactivity
-    /*
+    useEffect(() => {
+        if (map) {
+            setZoom(map.getZoom());
+        }
+    }, [map, map.getZoom()]);
+
     return (
         <>
-          {markers.map(({ ...marker }) => {
-            return (
-              <Marker
-                key={marker.attraction_id}
-                latitude={marker.latitude}
-                longitude={marker.longitude}
-                offsetLeft={-17.5}
-                offsetTop={-38}
-                onClick={(e) => {
-                  setSelectedMarker(marker);
-                  setPopupPosition([marker.longitude, marker.latitude]);
-                }}
-              >
-                <MarkerIcon />
-              </Marker>
-            );
-          })}
-          {selectedMarker && (
-            <Popup
-              marker={selectedMarker}
-              position={popupPosition}
-              onClose={() => setSelectedMarker(null)}
-            />
-          )}
-        </>
-      );
-      */
-    return (
-        <>
-        {markers.map(({ ...marker }) => {
-            return (
-            <Marker key={marker.attraction_id} latitude={marker.latitude} longitude={marker.longitude} offsetLeft={-17.5} offsetTop={-38}>
-            <MarkerIcon />
-            </Marker>
-            )})}
+            {markers.map(({ ...marker }) => {
+                return(
+                    <Marker onClick={(event) => {
+                        handleMarkerClick(marker)
+                    }} key={marker.attraction_id} latitude={marker.latitude} longitude={marker.longitude} offsetLeft={-17.5} offsetTop={-38}>
+                    <MarkerIcon />
+                    </Marker>
+                )}
+            )}
+            {selectedMarkers.map((selectedMarker) => (
+                <Popup
+                    key={selectedMarker.key}
+                    latitude={selectedMarker.latitude}
+                    longitude={selectedMarker.longitude}
+                    offsetTop={-20}
+                    offsetLeft={-20}
+                    closeButton={true}
+                    onClose={() => setSelectedMarkers(selectedMarkers.filter(marker => marker.type !== selectedMarker.key && marker.name !== selectedMarker.name && marker.latitude !== selectedMarker.latitude && marker.longitude !== selectedMarker.longitude))}
+                    closeOnClick={false}
+                    anchor="top">
+                        <div style={{ padding: '10px', borderRadius: '10px', color: 'black' }}>
+                            <h3>{selectedMarker.name}</h3>
+                        </div>
+                </Popup>
+            ))}
         </>
     )
 }
