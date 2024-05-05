@@ -80,3 +80,9 @@
   color: red;
   margin-top: 10px;
 }
+
+/* For LazyTable.jsx */
+
+.whiteBackgroundCell {
+  background-color: white;
+}
