@@ -407,7 +407,7 @@ const all_restaurants = async function(req, res) {
 
 // Route 6: GET /restaurant_info/id
 const restaurant_info = async function(req, res) {
-  const id = req.params.id;
+  const id = req.query.id;
 
   connection.query(`
     SELECT *
@@ -427,7 +427,7 @@ const restaurant_info = async function(req, res) {
 
 // Route 7: GET /attraction_info/id
 const attraction_info = async function(req, res) {
-  const id = req.params.id;
+  const id = req.query.id;
 
   connection.query(`
     SELECT *
@@ -446,8 +446,9 @@ const attraction_info = async function(req, res) {
 
 // Route 8: GET /most_popular_restaurants
 const most_popular_restaurants = async function(req, res) {
-  const zipcode = req.query.zip_code ?? '';
+  const zipcode = req.query.zip_code;
 
+  if (zipcode) {
     connection.query(`
       WITH MostPopularRestaurants AS (
       SELECT RES.business_id, RES.name, RES.address, RES.stars, RES.review_count 
@@ -478,6 +479,39 @@ const most_popular_restaurants = async function(req, res) {
         res.json(data);
       }
     });
+  } else {
+    connection.query(`
+      WITH MostPopularRestaurants AS (
+      SELECT RES.business_id, RES.name, RES.address, RES.stars, RES.review_count 
+      FROM Restaurants RES
+      GROUP BY RES.business_id
+      ORDER BY RES.review_count DESC
+      LIMIT 100
+      )
+      SELECT MPR.business_id, MPR.name, MPR.address, MPR.stars, MPR.review_count, (SELECT R.text
+      FROM MostPopularRestaurants MPR
+      WHERE MPR.business_id = R.business_id AND R.stars >= 4 LIMIT 1) as high_rating_review_text,
+      (SELECT R.text
+      FROM MostPopularRestaurants MPR
+      WHERE MPR.business_id = R.business_id AND R.stars >= 2 AND R.stars <= 3 LIMIT 1) as mid_rating_review_text,
+      (SELECT R.text
+      FROM MostPopularRestaurants MPR
+      WHERE MPR.business_id = R.business_id AND R.stars <= 1
+      LIMIT 1) as low_rating_review_text
+      FROM Reviews R JOIN MostPopularRestaurants MPR ON MPR.business_id = R.business_id
+      GROUP BY R.business_id;
+      `
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+  }
+
+    
 }
 
 // Route 9: GET /best_restaurants_per_category
