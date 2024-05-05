@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMapGL, { NavigationControl, Source, Layer } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Markers } from './Markers';
-import { Restaurants } from './Restaurants';
+// import { Restaurants } from './Restaurants';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX; 
 
@@ -49,21 +49,8 @@ const Map = ({ initialCoordinates }) => {
           >
             <NavigationControl className="navigation-control" showCompass={false} />
             <Markers />
+            
             <Restaurants />
-
-            {/* Conditionally display the rectangle layer */}
-            {!initialCoordinates && (
-              <Source type="geojson" data={rectangleGeoJSON}>
-                <Layer
-                  id="rectangle"
-                  type="fill"
-                  paint={{
-                    'fill-color': '#aaa', // grey color
-                    'fill-opacity': 0.5
-                  }}
-                />
-              </Source>
-            )}
           </ReactMapGL>
         </div>
       </div>
