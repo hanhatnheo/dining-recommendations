@@ -62,99 +62,101 @@ export default function SongsPage() {
   ];
 
   return (
-    <Container>
+    <div>
       <Navbar /> {/* This will place the Navbar at the top */}
-      <h2>Search Songs</h2>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            fullWidth
-          />
+      <Container>
+        <h2>Search Songs</h2>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField
+              label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel
+              control={<Checkbox checked={explicit} onChange={(e) => setExplicit(e.target.checked)} />}
+              label="Explicit"
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={duration}
+              onChange={(e, newValue) => setDuration(newValue)}
+              valueLabelDisplay="auto"
+              valueLabelFormat={value => `${Math.floor(value / 60)}m ${value % 60}s`}
+              min={60}
+              max={660}
+              aria-labelledby="duration-slider"
+            />
+            <p>Duration Range</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={plays}
+              onChange={(e, newValue) => setPlays(newValue)}
+              valueLabelDisplay="auto"
+              valueLabelFormat={(value) => `${(value / 1000000).toFixed(1)}M`}
+              min={0}
+              max={1100000000}
+              aria-labelledby="plays-slider"
+            />
+            <p>Plays Range (Millions)</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={danceability}
+              onChange={(e, newValue) => setDanceability(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1}
+              step={0.1}
+              aria-labelledby="danceability-slider"
+            />
+            <p>Danceability</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={energy}
+              onChange={(e, newValue) => setEnergy(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1}
+              step={0.1}
+              aria-labelledby="energy-slider"
+            />
+            <p>Energy</p>
+          </Grid>
+          <Grid item xs={4}>
+            <Slider
+              value={valence}
+              onChange={(e, newValue) => setValence(newValue)}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1}
+              step={0.1}
+              aria-labelledby="valence-slider"
+            />
+            <p>Valence</p>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
+              Search
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox checked={explicit} onChange={(e) => setExplicit(e.target.checked)} />}
-            label="Explicit"
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Slider
-            value={duration}
-            onChange={(e, newValue) => setDuration(newValue)}
-            valueLabelDisplay="auto"
-            valueLabelFormat={value => `${Math.floor(value / 60)}m ${value % 60}s`}
-            min={60}
-            max={660}
-            aria-labelledby="duration-slider"
-          />
-          <p>Duration Range</p>
-        </Grid>
-        <Grid item xs={4}>
-          <Slider
-            value={plays}
-            onChange={(e, newValue) => setPlays(newValue)}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => `${(value / 1000000).toFixed(1)}M`}
-            min={0}
-            max={1100000000}
-            aria-labelledby="plays-slider"
-          />
-          <p>Plays Range (Millions)</p>
-        </Grid>
-        <Grid item xs={4}>
-          <Slider
-            value={danceability}
-            onChange={(e, newValue) => setDanceability(newValue)}
-            valueLabelDisplay="auto"
-            min={0}
-            max={1}
-            step={0.1}
-            aria-labelledby="danceability-slider"
-          />
-          <p>Danceability</p>
-        </Grid>
-        <Grid item xs={4}>
-          <Slider
-            value={energy}
-            onChange={(e, newValue) => setEnergy(newValue)}
-            valueLabelDisplay="auto"
-            min={0}
-            max={1}
-            step={0.1}
-            aria-labelledby="energy-slider"
-          />
-          <p>Energy</p>
-        </Grid>
-        <Grid item xs={4}>
-          <Slider
-            value={valence}
-            onChange={(e, newValue) => setValence(newValue)}
-            valueLabelDisplay="auto"
-            min={0}
-            max={1}
-            step={0.1}
-            aria-labelledby="valence-slider"
-          />
-          <p>Valence</p>
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
-            Search
-          </Button>
-        </Grid>
-      </Grid>
-      <h2>Results</h2>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        pageSize={pageSize}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        rowsPerPageOptions={[5, 10, 25]}
-        autoHeight
-      />
-    </Container>
+        <h2>Results</h2>
+        <DataGrid
+          rows={data}
+          columns={columns}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          rowsPerPageOptions={[5, 10, 25]}
+          autoHeight
+        />
+      </Container>
+    </div>
   );
 }
