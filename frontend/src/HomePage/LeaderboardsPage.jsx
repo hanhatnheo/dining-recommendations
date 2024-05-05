@@ -41,6 +41,13 @@ export default function LeaderboardsPage() {
     { field: 'address', headerName: 'Address', width: 80 }
   ];
 
+
+  const commonColumns2 = [
+    { field: 'numberRes', headerName: 'Number of Restaurants', width: 150 },
+    { field: 'avgResRating', headerName: 'Average Restaurant Rating', width: 150 },
+    { field: 'totalResRev', headerName: 'Number of Reviews', width: 100 },    
+  ];
+
   return (
     <div><Navbar />
     <Container>
@@ -61,7 +68,7 @@ export default function LeaderboardsPage() {
           <h3>Best Zip Codes for Restaurants!</h3>
           <DataGrid
             rows={zipcodeRankingData}
-            columns={commonColumns}
+            columns={commonColumns2}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
