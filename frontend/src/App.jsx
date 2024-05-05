@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Intro />} />  // Set Intro as the root path
         <Route path="/home" element={<HomePage />} />  // Change path to /home
-        <Route path="/restaurants" element={<RestaurantsPage />} />
+        <Route path="/all_restaurants" element={<RestaurantsPage />} />
         <Route path="/leaderboards" element={<LeaderboardsPage />} />
       </Routes>
     </Router>
