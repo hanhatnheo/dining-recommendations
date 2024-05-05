@@ -41,10 +41,10 @@ const random_attraction = async function(req, res) {
   connection.query(`
     SELECT *
     FROM Attractions A
-    WHERE zip_code = '19104' AND (type = 'viewpoint' OR type = 'museum' OR type = 'park'
+    WHERE (type = 'viewpoint' OR type = 'museum' OR type = 'park'
     OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
     OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
-    OR type = 'attraction')
+    OR type = 'attraction') 
     AND A.latitude BETWEEN -100 AND 100 AND A.longitude BETWEEN -100 AND 100 
     LIMIT 1 OFFSET 1;
   `, (err, data) => {
