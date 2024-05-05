@@ -123,7 +123,9 @@ export default function LeaderboardsPage() {
           <DataGrid
             rows={zipcodeRankingData}
             columns={zipcodeColumns}
-            pageSize={pageSize}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 25 } },
+            }}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
