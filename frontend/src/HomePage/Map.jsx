@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactMapGL, { NavigationControl } from "react-map-gl";
+import ReactMapGL, { NavigationControl, Source, Layer } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Markers } from './Markers';
 // import { Restaurants } from './Restaurants';
@@ -13,11 +13,27 @@ const MAP_CONFIG = {
   mapboxAccessToken: MAPBOX_TOKEN
 };
 
+// Define the GeoJSON data for the rectangle
+const rectangleGeoJSON = {
+  type: 'Feature',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [
+      [
+        [-100.01, 40.01],  // Adjust these coordinates to frame your rectangle appropriately
+        [-99.99, 40.01],
+        [-99.99, 39.99],
+        [-100.01, 39.99],
+        [-100.01, 40.01]  // Closed loop (first coordinate repeated)
+      ]
+    ]
+  }
+};
+
 const Map = ({ initialCoordinates }) => {
     const mapRef = React.useRef(null);
     const mapContainerRef = React.useRef(null);
 
-    
     return (
       <div style={{ width: "100%", height: "98vh" }}>
         <div ref={mapContainerRef} className="map">
@@ -33,6 +49,8 @@ const Map = ({ initialCoordinates }) => {
           >
             <NavigationControl className="navigation-control" showCompass={false} />
             <Markers />
+            
+            <Restaurants />
           </ReactMapGL>
         </div>
       </div>
