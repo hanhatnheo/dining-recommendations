@@ -4,6 +4,7 @@ import {
   Grid
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { TextField, Button } from '@mui/material';
 import Navbar from './Navbar';
 import config from '../../../server/config.json';
 import axios from 'axios';
@@ -15,7 +16,8 @@ export default function LeaderboardsPage() {
   const [recommendedData, setRecommendedData] = useState([]);
   const [zipcodeRankingData, setZipcodeRankingData] = useState([]);
   const [mostPopularData, setMostPopularData] = useState([]);
-
+  const [zipCodeFilter, setZipCodeFilter] = useState('');
+  
   const getRecommendedRestaurants = useCallback(async () => {
     try {
       // Fetch Recommended Restaurants (route 15.5)
@@ -38,19 +40,28 @@ export default function LeaderboardsPage() {
     } catch (error) {
       console.error('Error fetching zips', error);
     }
-   });
+   }, []);
 
   const getPopularRestaurants = useCallback(async () => {
     try {
       // Fetch Most Popular Restaurants (route 8)
-      const response = await axios.get(`http://${config.server_host}:${config.server_port}/most_popular_restaurants`)
+      const url = zipCodeFilter
+      ? `http://${config.server_host}:${config.server_port}/most_popular_restaurants?zip_code=${zipCodeFilter}`
+      : `http://${config.server_host}:${config.server_port}/most_popular_restaurants`;
+
+      console.log('clicked')
+
+      console.log(url);
+
+      const response = await axios.get(url);
+      console.log('Most popular')
       console.log(response.data)
       setMostPopularData(response.data)
       console.log(mostPopularData);
     } catch (error) {
       console.error('Error fetching most popular restaurants', error);
     }
-   });
+   }, [zipCodeFilter]);
 
   useEffect(() => {
     getRecommendedRestaurants();
@@ -60,12 +71,7 @@ export default function LeaderboardsPage() {
   useEffect(() => {
     getZipRank();
     console.log(zipcodeRankingData);
-  }, [zipcodeRankingData]);
-
-  useEffect(() => {
-    getPopularRestaurants();
-    console.log(mostPopularData);
-  }, [mostPopularData]);
+  }, []);
 
   const recommendedColumns = [
     { field: 'BusinessID', headerName: 'ID', width: 80 },
@@ -86,9 +92,9 @@ export default function LeaderboardsPage() {
 
   const popularColumns = [
     { field: 'business_id', headerName: 'ID', width: 80 },
-    { field: 'name', headerName: 'Restaurant Name', width: 150 },
+    { field: 'name', headerName: 'Restaurant Name', width: 100 },
     { field: 'stars', headerName: 'Number of Restaurants', width: 80 },
-    { field: 'review_count', headerName: 'Total Reviews', width: 100 },
+    { field: 'review_count', headerName: 'Total Reviews', width: 80 },
     { field: 'Address', headerName: 'Address', width: 120 },
     { field: 'high_rating_review_text', headerName: '4-5 Stars Review', width: 120 },
     { field: 'mid_rating_review_text', headerName: '2-3 Stars Review', width: 120 },
@@ -100,7 +106,7 @@ export default function LeaderboardsPage() {
     <Container>
       <h2>Leaderboards</h2>
       <Grid container spacing={4}>
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={6}>
           <h3>Best Restaurants in Your Zip!</h3>
           <DataGrid
             rows={recommendedData}
@@ -112,7 +118,7 @@ export default function LeaderboardsPage() {
             getRowId={(row) => row.BusinessID}
           />
         </Grid>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={6}>
           <h3>Best Zip Codes for Restaurants!</h3>
           <DataGrid
             rows={zipcodeRankingData}
@@ -126,6 +132,16 @@ export default function LeaderboardsPage() {
         </Grid>
         <Grid item xs={12}>
           <h3>Most Popular Restaurants in the U.S.!</h3>
+          <TextField
+          label="Enter Your Zip Code"
+          variant="outlined"
+          value={zipCodeFilter}
+          onChange={(e) => setZipCodeFilter(e.target.value)}
+          style={{ marginBottom: '20px' }}
+        />
+        <Button onClick={getPopularRestaurants} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+          Search
+        </Button>
           <DataGrid
             rows={mostPopularData}
             columns={popularColumns}

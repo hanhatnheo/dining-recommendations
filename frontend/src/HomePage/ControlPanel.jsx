@@ -8,7 +8,26 @@ const ControlPanel = ({ onToggleLayer, onChangeStyle }) => {
       <button onClick={() => onToggleLayer('markers')}>Toggle Markers</button>
       <button onClick={() => onChangeStyle('mapbox://styles/mapbox/dark-v9')}>Dark Mode</button>
       <button onClick={() => onChangeStyle('mapbox://styles/mapbox/light-v9')}>Light Mode</button>
+      <div className="input">
+        <label>Attractions</label>
+        <input
+          type="checkbox"
+          name="Attractions"
+          checked={allDays}
+          onChange={evt => onChangeAllDays(evt.target.checked)}
+        />
+      </div>
+      <div className="input">
+        <label>Restaurants</label>
+        <input
+          type="checkbox"
+          name="Restaurants"
+          checked={allDays}
+          onChange={evt => onChangeAllDays(evt.target.checked)}
+        />
+      </div>
     </div>
+    
   );
 };
 

@@ -24,8 +24,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Intro />} />  // Set Intro as the root path
-        <Route path="/home" element={<HomePage />} />  // Change path to /home
+        <Route path="/" element={<Intro />} />  
+        <Route path="/home" element={<HomePage />} />  
         <Route path="/all_restaurants" element={<RestaurantsPage />} />
         <Route path="/leaderboards" element={<LeaderboardsPage />} />
       </Routes>
