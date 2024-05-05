@@ -172,192 +172,35 @@ const restaurant_recommendations = async function(req, res) {
 // Route 5: GET /all_restaurants
 const all_restaurants = async function(req, res) {
   const name = req.query.name ?? '';
-  const rating = req.query.rating ?? 0;
-  const drinkScore = req.query.drink_score ?? -25;
-  const valueScore = req.query.value_score ?? -25;
-  const foodScore = req.query.food_score ?? -25;
-  const serviceScore = req.query.service_score ?? -25;
-  const category = req.query.category ?? '';
+  const ratingMin = req.query.rating_min ?? 0;
+  const ratingMax= req.query.rating_max ?? 5;
+  const drinkScoreMin = req.query.drink_score_min ?? -25;
+  const drinkScoreMax = req.query.drink_score_max ?? 25;
+  const valueScoreMin = req.query.value_score_min ?? -25;
+  const valueScoreMax = req.query.value_score_max ?? 25;
+  const foodScoreMin = req.query.food_score_min ?? -25;
+  const foodScoreMax = req.query.food_score_max ?? 25;
+  const serviceScoreMin = req.query.service_score_min ?? -25;
+  const serviceScoreMax = req.query.service_score_max ?? 25;
   const zipcode = req.query.zip_code ?? '';
 
   if (name === '') {
-    if (category === '') {
       if (zipcode === '') {
         connection.query(`
           WITH ReviewsWithTheirRestaurants AS (
           SELECT RES.business_id, REV.stars, REV.text
           FROM Restaurants RES
           JOIN Reviews REV ON RES.business_id = REV.business_id)
-          SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
-            (SELECT RWR.text
-            FROM ReviewsWithTheirRestaurants RWR WHERE R.business_id = RWR.business_id
-            AND stars >= 4
-            LIMIT 1) as high_rating_review_text, (SELECT RWR.text
-            FROM ReviewsWithTheirRestaurants RWR WHERE R.business_id = RWR.business_id
-            AND stars >= 2
-            AND stars <= 3
-            LIMIT 1) as mid_rating_review_text, (SELECT RWR.text
-            FROM ReviewsWithTheirRestaurants RWR WHERE R.business_id = RWR.business_id
-            AND stars <= 1
-            LIMIT 1) as low_rating_review_text
-          FROM Restaurants R
-          WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
-            R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
-            R.service_score >= '${serviceScore}';
-          `
-          , (err, data) => {
-          if (err || data.length === 0) {
-            console.log(err);
-            res.json([]);
-          } else {
-            res.json(data);
-            }
-          });
-        } else {
-          connection.query(`
-          WITH ReviewsWithTheirRestaurants AS (
-            SELECT RES.business_id, REV.stars, REV.text
-            FROM Restaurants RES
-            JOIN Reviews REV ON RES.business_id = REV.business_id)
-          
-          SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 4
-                LIMIT 1) as high_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 2
-                  AND stars <= 3
-                LIMIT 1) as mid_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars <= 1
-                LIMIT 1) as low_rating_review_text
-          FROM Restaurants R
-          WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
-            R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
-            R.service_score >= '${serviceScore}' AND R.zip_code = '${zipcode}';
-          `
-          , (err, data) => {
-          if (err || data.length === 0) {
-            console.log(err);
-            res.json([]);
-          } else {
-            res.json(data);
-            }
-          });
-        }
-      } else {
-        if (zipcode === '') {
-          connection.query(`
-          WITH ReviewsWithTheirRestaurants AS (
-          SELECT RES.business_id, REV.stars, REV.text
-          FROM Restaurants RES
-          JOIN Reviews REV ON RES.business_id = REV.business_id)
-          
-          SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 4
-                LIMIT 1) as high_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 2
-                  AND stars <= 3
-                LIMIT 1) as mid_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars <= 1
-                LIMIT 1) as low_rating_review_text
-          FROM Restaurants R
-          WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
-            R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
-            R.service_score >= '${serviceScore}' AND (R.cat_1 LIKE '%${category}%' OR 
-            R.cat_2 LIKE '%${category}%' OR R.cat_3 LIKE '%${category}%');
-          `
-          , (err, data) => {
-          if (err || data.length === 0) {
-            console.log(err);
-            res.json([]);
-          } else {
-            res.json(data);
-            }
-          });
-        } else {
-          connection.query(`
-          WITH ReviewsWithTheirRestaurants AS (
-          SELECT RES.business_id, REV.stars, REV.text
-          FROM Restaurants RES
-          JOIN Reviews REV ON RES.business_id = REV.business_id)
-          
-          SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 4
-                LIMIT 1) as high_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 2
-                  AND stars <= 3
-                LIMIT 1) as mid_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars <= 1
-                LIMIT 1) as low_rating_review_text
-          FROM Restaurants R
-          WHERE R.stars >= '${rating}' AND R.drink_score >= '${drinkScore}' AND 
-            R.value_score >= '${valueScore}' AND R.food_score >= '${foodScore}' AND 
-            R.service_score >= '${serviceScore}' AND (R.cat_1 LIKE '%${category}%' OR 
-            R.cat_2 LIKE '%${category}%' OR R.cat_3 LIKE '%${category}%') AND 
-            R.zip_code = '${zipcode}';
-          `
-          , (err, data) => {
-          if (err || data.length === 0) {
-            console.log(err);
-            res.json([]);
-          } else {
-            res.json(data);
-            }
-          });
-        }
-      }
-    } else {
-      if (zipcode === '') {
-        connection.query(`
-          WITH ReviewsWithTheirRestaurants AS (
-          SELECT RES.business_id, REV.stars, REV.text
-          FROM Restaurants RES
-          JOIN Reviews REV ON RES.business_id = REV.business_id)
-        
-          SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
+
+          SELECT DISTINCT R.business_id, R.name, R.address, R.stars, R.food_score, R.drink_score, R.service_score, R.value_score,
                 (SELECT RWR.text
                   FROM ReviewsWithTheirRestaurants RWR
                   WHERE R.business_id = RWR.business_id
-                    AND stars >= 4
-                  LIMIT 1) as high_rating_review_text,
-                  (SELECT RWR.text
-                  FROM ReviewsWithTheirRestaurants RWR
-                  WHERE R.business_id = RWR.business_id
-                    AND stars >= 2
-                    AND stars <= 3
-                  LIMIT 1) as mid_rating_review_text,
-                  (SELECT RWR.text
-                  FROM ReviewsWithTheirRestaurants RWR
-                  WHERE R.business_id = RWR.business_id
-                    AND stars <= 1
-                  LIMIT 1) as low_rating_review_text
+                  LIMIT 1) as review_text
           FROM Restaurants R
-          WHERE R.name = '${name}';
+          WHERE R.stars >= '${ratingMin}' AND R.stars <= '${ratingMax}' AND R.drink_score >= '${drinkScoreMin}' AND R.drink_score <= '${drinkScoreMax}' AND
+            R.value_score >= '${valueScoreMin}' AND R.value_score <= '${valueScoreMax}' AND R.food_score >= '${foodScoreMin}' AND R.food_score <= '${foodScoreMax}' AND
+            R.service_score >= '${serviceScoreMin}' AND R.service_score <= '${serviceScoreMax}';
           `
           , (err, data) => {
           if (err || data.length === 0) {
@@ -370,29 +213,19 @@ const all_restaurants = async function(req, res) {
       } else {
         connection.query(`
         WITH ReviewsWithTheirRestaurants AS (
-        SELECT RES.business_id, REV.stars, REV.text
-        FROM Restaurants RES
-        JOIN Reviews REV ON RES.business_id = REV.business_id)
-      
-        SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
-              (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 4
-                LIMIT 1) as high_rating_review_text,
+          SELECT RES.business_id, REV.stars, REV.text
+          FROM Restaurants RES
+          JOIN Reviews REV ON RES.business_id = REV.business_id)
+
+        SELECT DISTINCT R.business_id, R.name, R.address, R.stars, R.food_score, R.drink_score, R.service_score, R.value_score,
                 (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars >= 2
-                  AND stars <= 3
-                LIMIT 1) as mid_rating_review_text,
-                (SELECT RWR.text
-                FROM ReviewsWithTheirRestaurants RWR
-                WHERE R.business_id = RWR.business_id
-                  AND stars <= 1
-                LIMIT 1) as low_rating_review_text
+                  FROM ReviewsWithTheirRestaurants RWR
+                  WHERE R.business_id = RWR.business_id
+                  LIMIT 1) as review_text
         FROM Restaurants R
-        WHERE R.name = '${name}' AND R.zip_code = '${zipcode}'';
+        WHERE R.zip_code = '${zipcode}' AND R.stars >= '${ratingMin}' AND R.stars <= '${ratingMax}' AND R.drink_score >= '${drinkScoreMin}' AND R.drink_score <= '${drinkScoreMax}' AND
+        R.value_score >= '${valueScoreMin}' AND R.value_score <= '${valueScoreMax}' AND R.food_score >= '${foodScoreMin}' AND R.food_score <= '${foodScoreMax}' AND
+        R.service_score >= '${serviceScoreMin}' AND R.service_score <= '${serviceScoreMax}';
         `
         , (err, data) => {
         if (err || data.length === 0) {
@@ -403,6 +236,54 @@ const all_restaurants = async function(req, res) {
         }
         });
       }
+  } else {
+    if (zipcode === '') {
+      connection.query(`
+      WITH ReviewsWithTheirRestaurants AS (
+        SELECT RES.business_id, REV.stars, REV.text
+        FROM Restaurants RES
+        JOIN Reviews REV ON RES.business_id = REV.business_id)
+
+        SELECT DISTINCT R.business_id, R.name, R.address, R.stars, R.food_score, R.drink_score, R.service_score, R.value_score,
+              (SELECT RWR.text
+                FROM ReviewsWithTheirRestaurants RWR
+                WHERE R.business_id = RWR.business_id
+                LIMIT 1) as review_text
+        FROM Restaurants R
+        WHERE R.name = '${name}';
+        `
+        , (err, data) => {
+        if (err || data.length === 0) {
+          console.log(err);
+          res.json([]);
+        } else {
+          res.json(data);
+        }
+      });
+    } else {
+      connection.query(`
+      WITH ReviewsWithTheirRestaurants AS (
+        SELECT RES.business_id, REV.stars, REV.text
+        FROM Restaurants RES
+        JOIN Reviews REV ON RES.business_id = REV.business_id)
+
+      SELECT DISTINCT R.business_id, R.name, R.address, R.stars, R.food_score, R.drink_score, R.service_score, R.value_score,
+              (SELECT RWR.text
+                FROM ReviewsWithTheirRestaurants RWR
+                WHERE R.business_id = RWR.business_id
+                LIMIT 1) as review_text
+      FROM Restaurants R
+      WHERE R.name = '${name}';
+      `
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+      });
+    }
   }
 }
 

@@ -50,7 +50,7 @@ return (
         </Link>
       </li>
       <li>
-        <Link to="/restaurants" style={linkStyles}>
+        <Link to="/all_restaurants" style={linkStyles}>
           Search Restaurants
         </Link>
       </li>

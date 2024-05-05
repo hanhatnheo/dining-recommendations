@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
-  Checkbox,
   Container,
-  FormControlLabel,
   Grid,
-  Link,
   Slider,
   TextField,
 } from '@mui/material';
@@ -13,142 +10,150 @@ import { DataGrid } from '@mui/x-data-grid';
 import Navbar from './Navbar';
 import config from '../../../server/config.json';
 
+var bgColors = {
+  "Default": "#DFDEE5"
+};
+
 export default function SongsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
-  const [selectedSongId, setSelectedSongId] = useState(null);
 
-  const [title, setTitle] = useState('');
-  const [duration, setDuration] = useState([60, 660]);
-  const [plays, setPlays] = useState([0, 1000000000]);
-  const [danceability, setDanceability] = useState([0, 1]);
-  const [energy, setEnergy] = useState([0, 1]);
-  const [valence, setValence] = useState([0, 1]);
-  const [explicit, setExplicit] = useState(false);
+  const [name, setName] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [stars, setStars] = useState([0, 5]);
+  const [foodQ, setFoodQ] = useState([-25, 25]);
+  const [drinkQ, setDrinkQ] = useState([-25, 25]);
+  const [serviceQ, setServiceQ] = useState([-25, 25]);
+  const [valuePerD, setValuePerD] = useState([-25, 25]);
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/search_songs`)
+    fetch(`http://${config.server_host}:${config.server_port}/all_restaurants`)
       .then(res => res.json())
       .then(resJson => {
-        const songsWithId = resJson.map(song => ({ id: song.song_id, ...song }));
-        setData(songsWithId);
+        const restaurantsWithId = resJson.map(restaurant => ({ id: restaurant.business_id, ...restaurant }));
+        setData(restaurantsWithId);
       });
   }, []);
 
   const search = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/search_songs?title=${title}` +
-      `&duration_low=${duration[0]}&duration_high=${duration[1]}` +
-      `&plays_low=${plays[0]}&plays_high=${plays[1]}` +
-      `&danceability_low=${danceability[0]}&danceability_high=${danceability[1]}` +
-      `&energy_low=${energy[0]}&energy_high=${energy[1]}` +
-      `&valence_low=${valence[0]}&valence_high=${valence[1]}` +
-      `&explicit=${explicit}`
+    fetch(`http://${config.server_host}:${config.server_port}/all_restaurants?name=${name}` +
+      `&rating_min=${stars[0]}&&rating_max=${stars[1]}&food_score_min=${foodQ[0]}&food_score_max=${foodQ[1]}` +
+      `&drink_score_min=${drinkQ[0]}&drink_score_max=${drinkQ[1]}&service_score_min=${serviceQ[0]}&service_score_max=${serviceQ[1]}` +
+      `&value_score_min=${valuePerD[0]}&value_score_max=${valuePerD[1]}&zip_code=${zipCode}`
     )
       .then(res => res.json())
       .then(resJson => {
-        const songsWithId = resJson.map(song => ({ id: song.song_id, ...song }));
-        setData(songsWithId);
+        const restaurantsWithId = resJson.map(restaurant => ({ id: restaurant.business_id, ...restaurant }));
+        setData(restaurantsWithId);
       });
   }
 
   const columns = [
-    { field: 'stars', headerName: 'Stars', width: 100, valueFormatter: ({ value }) => `${Math.floor(value / 60)}:${value % 60 < 10 ? '0' : ''}${value % 60}`},
-    { field: 'foodQ', headerName: 'Food Quality', width: 200},
-    { field: 'drinkQ', headerName: 'Drink Quality', width: 200 },
-    { field: 'serviceQ', headerName: 'Service Quality', width: 200 },
-    { field: 'valuePerD', headerName: 'Value Per Dollar', width: 150 },
-    { field: 'distance', headerName: 'Distance', width: 100 },
+    { field: 'name', headerName: 'Name', width: 100 },
+    { field: 'address', headerName: 'Address', width: 200 },
+    { field: 'stars', headerName: 'Stars', width: 100 },
+    { field: 'food_score', headerName: 'Food', width: 100 },
+    { field: 'drink_score', headerName: 'Drink', width: 75 },
+    { field: 'service_score', headerName: 'Service', width: 75 },
+    { field: 'value_score', headerName: 'Value', width: 75 },
+    { field: 'review_text', headerName: 'Review', width: 300 }
   ];
 
   return (
     <div>
       <Navbar /> {/* This will place the Navbar at the top */}
       <Container>
-        <h2>Search for Restaurants</h2>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-          <TextField
-          label="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          fullWidth
-          InputProps={{
-            style: { backgroundColor: 'white', borderRadius: '4px' }, // Set background color and border radius
-          }}
-          />
+        <div style={{ backgroundColor: bgColors.Default, padding: 20, marginTop: 20, borderRadius: 20, }}>
+          <h2>Search for Restaurants</h2>
+          <Grid container
+            spacing={3}
+            direction="row"
+            justifyContent="center"
+            alignItems="center">
+            <Grid item xs={12}>
+              <TextField
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+                InputProps={{
+                  style: { backgroundColor: 'white', borderRadius: '4px' }, // Set background color and border radius
+                }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="ZIP Code"
+                value={zipCode}
+                onChange={(e) => setZipCode(e.target.value)}
+                fullWidth
+                InputProps={{
+                  style: { backgroundColor: 'white', borderRadius: '4px' }, // Set background color and border radius
+                }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <Slider
+                value={stars}
+                onChange={(e, newValue) => setStars(newValue)}
+                valueLabelDisplay="auto"
+                min={0}
+                max={5}
+                aria-labelledby="stars-slider"
+              />
+              <p>Stars</p>
+            </Grid>
+            <Grid item xs={4}>
+              <Slider
+                value={foodQ}
+                onChange={(e, newValue) => setFoodQ(newValue)}
+                valueLabelDisplay="auto"
+                min={-25}
+                max={25}
+                aria-labelledby="foodQ-slider"
+              />
+              <p>Food Quality</p>
+            </Grid>
+            <Grid item xs={4}>
+              <Slider
+                value={drinkQ}
+                onChange={(e, newValue) => setDrinkQ(newValue)}
+                valueLabelDisplay="auto"
+                min={-25}
+                max={25}
+                aria-labelledby="danceability-slider"
+              />
+              <p>Drink Quality</p>
+            </Grid>
+            <Grid item xs={4}>
+              <Slider
+                value={serviceQ}
+                onChange={(e, newValue) => setServiceQ(newValue)}
+                valueLabelDisplay="auto"
+                min={-25}
+                max={25}
+                aria-labelledby="serviceQ-slider"
+              />
+              <p>Service Quality</p>
+            </Grid>
+            <Grid item xs={4}>
+              <Slider
+                value={valuePerD}
+                onChange={(e, newValue) => setValuePerD(newValue)}
+                valueLabelDisplay="auto"
+                min={-25}
+                max={25}
+                aria-labelledby="valuePerD-slider"
+              />
+              <p>Value Per Dollar</p>
+            </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
+                Search
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox checked={explicit} onChange={(e) => setExplicit(e.target.checked)} />}
-              label="Explicit"
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Slider
-              value={duration}
-              onChange={(e, newValue) => setDuration(newValue)}
-              valueLabelDisplay="auto"
-              valueLabelFormat={value => `${Math.floor(value / 60)}m ${value % 60}s`}
-              min={60}
-              max={660}
-              aria-labelledby="duration-slider"
-            />
-            <p>Duration Range</p>
-          </Grid>
-          <Grid item xs={4}>
-            <Slider
-              value={plays}
-              onChange={(e, newValue) => setPlays(newValue)}
-              valueLabelDisplay="auto"
-              valueLabelFormat={(value) => `${(value / 1000000).toFixed(1)}M`}
-              min={0}
-              max={1100000000}
-              aria-labelledby="plays-slider"
-            />
-            <p>Plays Range (Millions)</p>
-          </Grid>
-          <Grid item xs={4}>
-            <Slider
-              value={danceability}
-              onChange={(e, newValue) => setDanceability(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1}
-              step={0.1}
-              aria-labelledby="danceability-slider"
-            />
-            <p>Danceability</p>
-          </Grid>
-          <Grid item xs={4}>
-            <Slider
-              value={energy}
-              onChange={(e, newValue) => setEnergy(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1}
-              step={0.1}
-              aria-labelledby="energy-slider"
-            />
-            <p>Energy</p>
-          </Grid>
-          <Grid item xs={4}>
-            <Slider
-              value={valence}
-              onChange={(e, newValue) => setValence(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1}
-              step={0.1}
-              aria-labelledby="valence-slider"
-            />
-            <p>Valence</p>
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
-              Search
-            </Button>
-          </Grid>
-        </Grid>
+        </div>
         <h2>Results</h2>
         <DataGrid
           rows={data}
