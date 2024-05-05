@@ -64,7 +64,7 @@ export default function SongsPage() {
   return (
     <Container>
       <Navbar /> {/* This will place the Navbar at the top */}
-      <h2>Search Songs</h2>
+      <h2>Search for Restaurants</h2>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <TextField

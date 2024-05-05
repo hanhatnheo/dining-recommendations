@@ -42,7 +42,8 @@ const Intro = () => {
 
   return (
     <div className="intro-page">
-      <h1>Welcome to Our Map App!</h1>
+      <h1>Welcome to PennEats!</h1>
+      <h2> <em> Made with coffee by Team 73 </em></h2>
       <div className="search-bar">
         <input
           type="text"
