@@ -67,12 +67,15 @@ export default function SongsPage() {
         <h2>Search for Restaurants</h2>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <TextField
-              label="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              fullWidth
-            />
+          <TextField
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          fullWidth
+          InputProps={{
+            style: { backgroundColor: 'white', borderRadius: '4px' }, // Set background color and border radius
+          }}
+          />
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
