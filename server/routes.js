@@ -772,6 +772,7 @@ const best_restaurants_in_top_zipcodes = async function(req, res) {
       FROM TopZipCodes
       LIMIT 5),
       Top5RestaurantsPerZip AS (SELECT
+      R.business_id AS BusinessID,
       R.name AS RestaurantName,
       R.review_count AS TotalReviews,
       R.stars AS AverageRating,

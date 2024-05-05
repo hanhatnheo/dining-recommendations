@@ -36,18 +36,18 @@ export default function LeaderboardsPage() {
   const commonColumns = [
     { field: 'restaurantName', headerName: 'Restaurant Name', width: 150 },
     { field: 'totalRev', headerName: 'Total Reviews', width: 100 },
-    { field: 'avgRating', headerName: 'Average Rating', width: 100 },
-    { field: 'zipCode', headerName: 'Zip Code', width: 130 },
-    { field: 'address', headerName: 'Address', width: 130 }
+    { field: 'avgRating', headerName: 'Average Rating', width: 120 },
+    { field: 'zipCode', headerName: 'Zip Code', width: 80 },
+    { field: 'address', headerName: 'Address', width: 80 }
   ];
 
   return (
+    <div><Navbar />
     <Container>
-      <Navbar />
       <h2>Leaderboards</h2>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <h3>/recommended_restaurants</h3>
+          <h3>Best Restaurants in Your Zip!</h3>
           <DataGrid
             rows={recommendedData}
             columns={commonColumns}
@@ -58,7 +58,7 @@ export default function LeaderboardsPage() {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <h3>/zipcode_ranking</h3>
+          <h3>Best Zip Codes for Restaurants!</h3>
           <DataGrid
             rows={zipcodeRankingData}
             columns={commonColumns}
@@ -69,7 +69,7 @@ export default function LeaderboardsPage() {
           />
         </Grid>
         <Grid item xs={12}>
-          <h3>/most_popular_restaurants</h3>
+          <h3>Most Popular Restaurants in the U.S.!</h3>
           <DataGrid
             rows={mostPopularData}
             columns={commonColumns}
@@ -81,5 +81,6 @@ export default function LeaderboardsPage() {
         </Grid>
       </Grid>
     </Container>
+    </div>
   );
 }
