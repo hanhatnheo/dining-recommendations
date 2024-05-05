@@ -185,7 +185,7 @@ export default function SongsPage() {
         <Grid item xs={12} style={{ marginTop: '20px' }}>
           {restaurant && (
           <div style={{ backgroundColor: '#778EBC', borderRadius: '10px', padding: '10px' }}>
-            Restaurant of the day: {restaurant.name}, {restaurant.rating}, {restaurant.address}
+            Restaurant of the day: {restaurant.name}, {restaurant.rating} stars, {restaurant.address}
           </div> )}
         </Grid>
       </Container>
