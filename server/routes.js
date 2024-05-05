@@ -407,7 +407,7 @@ const all_restaurants = async function(req, res) {
 
 // Route 6: GET /restaurant_info/id
 const restaurant_info = async function(req, res) {
-  const id = req.params.id;
+  const id = req.query.id;
 
   connection.query(`
     SELECT *
@@ -427,7 +427,7 @@ const restaurant_info = async function(req, res) {
 
 // Route 7: GET /attraction_info/id
 const attraction_info = async function(req, res) {
-  const id = req.params.id;
+  const id = req.query.id;
 
   connection.query(`
     SELECT *

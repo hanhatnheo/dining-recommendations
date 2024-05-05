@@ -16,6 +16,7 @@ CREATE TABLE Restaurants(
     food_score DECIMAL(20, 15),
     service_score DECIMAL(20, 15),
     review_count int(10),
+    zip_code varchar(255),
     PRIMARY KEY (business_id)
 );
 
@@ -36,6 +37,7 @@ CREATE TABLE Attractions(
     attraction_id varchar(255),
     address varchar(255),
     website varchar(255),
+    zip_code varchar(255),
     PRIMARY KEY (attraction_id)
 );
 
@@ -47,3 +49,11 @@ CREATE TABLE Nearby(
     FOREIGN KEY (business_id) REFERENCES Restaurants(business_id),
     FOREIGN KEY (attraction_id) REFERENCES Attractions(attraction_id)
 );
+
+CREATE TABLE LongLatLookUp(
+    postal_code varchar(255),
+    longitude decimal(11, 8),
+    latitude decimal(10,8),
+    PRIMARY KEY (longitude, latitude)
+)
+
