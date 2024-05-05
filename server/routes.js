@@ -764,6 +764,38 @@ const restaurants_within_bounds = async function(req, res) {
   }
 }
 
+//Route 15.5: Get restaurants in top 5 zipcodes of all time 
+
+const best_restaurants_in_top_zipcodes = async function(req, res) { 
+  connection.query(`
+      WITH Top5ZipCodes AS (
+      SELECT ZipCode
+      FROM TopZipCodes
+      LIMIT 5),
+      Top5RestaurantsPerZip AS (SELECT
+      R.name AS RestaurantName,
+      R.review_count AS TotalReviews,
+      R.stars AS AverageRating,
+      R.zip_code AS ZipCode,
+      R.address AS Address,
+      ROW_NUMBER() OVER (PARTITION BY R.zip_code ORDER BY R.review_count DESC) AS RestaurantRank
+      FROM Restaurants R
+      INNER JOIN Top5ZipCodes TZC ON R.zip_code = TZC.ZipCode
+      )
+      SELECT *
+      FROM Top5RestaurantsPerZip
+      WHERE RestaurantRank <= 5
+      ORDER BY ZipCode, RestaurantRank;`
+      , (err, data) => {
+      if (err || data.length === 0) {
+        console.log(err);
+        res.json([]);
+      } else {
+        res.json(data);
+      }
+    });
+}
+
 // Route 16: GET /zipgenerator/:zip_code
 const zip_generator = async function(req, res) {
   const userZipCode = req.params.zip_code;
@@ -771,8 +803,8 @@ const zip_generator = async function(req, res) {
   connection.query(`
     SELECT longitude, latitude
     FROM LongLatLookup
-    WHERE zip_code = ?
-  `, [userZipCode], (err, data) => {
+    WHERE postal_code = ${userZipCode}
+  `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);
       res.json({ error: 'No data found or query error' });
@@ -797,5 +829,6 @@ module.exports = {
   zipcode_ranking,
   attractions_within_bounds,
   restaurants_within_bounds,
+  best_restaurants_in_top_zipcodes,
   zip_generator
 }

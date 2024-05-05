@@ -13,7 +13,7 @@ const MAP_CONFIG = {
   mapboxAccessToken: MAPBOX_TOKEN
 };
 
-const Map = () => {
+const Map = ({ initialCoordinates }) => {
     const mapRef = React.useRef(null);
     const mapContainerRef = React.useRef(null);
 
@@ -26,8 +26,8 @@ const Map = () => {
             interactive
             {...MAP_CONFIG}
             initialViewState={{
-                longitude: -100,
-                latitude: 40,
+                longitude: initialCoordinates?.longitude || -100,
+                latitude: initialCoordinates?.latitude || 40,
                 zoom: 9,
               }}
           >
