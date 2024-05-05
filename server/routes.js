@@ -117,19 +117,19 @@ const attractions = async function(req, res) {
   }
 }
 
-// Route 4: GET /restaurant_recommendations/:id
+// Route 4: GET /restaurant_recommendations/id
 const restaurant_recommendations = async function(req, res) {
-  const id = req.params.id;
+  const id = req.query.id;
   const distance = req.query.distance ?? 23;
   const rating = req.query.rating ?? 0;
   const drinkScore = req.query.drink_score ?? -25;
   const valueScore = req.query.value_score ?? -25;
   const foodScore = req.query.food_score ?? -25;
   const serviceScore = req.query.service_score ?? -25;
-  const numRecs = req.query.num_recs ?? 20;
+  const numRecs = 5;
   
   connection.query(`
-    SELECT R.name, R.stars, R.address, R.latitude, R.longitude
+    SELECT R.name, R.stars, R.address, R.latitude, R.longitude, N.attraction_id
     FROM Attractions A JOIN Nearby N ON A.attraction_id = N.attraction_id
     JOIN Restaurants R ON N.business_id = R.business_id
     WHERE A.attraction_id = '${id}' AND R.stars >= '${rating}' AND 
@@ -276,7 +276,7 @@ const all_restaurants = async function(req, res) {
   }
 }
 
-// Route 6: GET /restaurant_info/:id
+// Route 6: GET /restaurant_info/id
 const restaurant_info = async function(req, res) {
   const id = req.params.id;
 
@@ -296,7 +296,7 @@ const restaurant_info = async function(req, res) {
   });
 }
 
-// Route 7: GET /attraction_info/:id
+// Route 7: GET /attraction_info/id
 const attraction_info = async function(req, res) {
   const id = req.params.id;
 
@@ -602,7 +602,7 @@ const attractions_within_bounds = async function(req, res) {
   }
 
   let baseQuery = `
-    SELECT name, type, latitude, longitude
+    SELECT name, type, latitude, longitude, attraction_id, address, website
     FROM Attractions
     WHERE latitude BETWEEN ? AND ? AND longitude BETWEEN ? AND ?
   `;

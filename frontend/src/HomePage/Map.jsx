@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMapGL, { NavigationControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Markers } from './Markers';
-import { Restaurants } from './Restaurants';
+// import { Restaurants } from './Restaurants';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX; 
 
@@ -33,8 +33,6 @@ const Map = () => {
           >
             <NavigationControl className="navigation-control" showCompass={false} />
             <Markers />
-            
-            <Restaurants />
           </ReactMapGL>
         </div>
       </div>
