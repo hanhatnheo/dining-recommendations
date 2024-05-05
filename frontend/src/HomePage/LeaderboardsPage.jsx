@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Container,
   Grid
@@ -6,6 +6,7 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import Navbar from './Navbar';
 import config from '../../../server/config.json';
+import axios from 'axios';
 
 export default function LeaderboardsPage() {
   const [pageSize, setPageSize] = useState(10);
@@ -15,30 +16,83 @@ export default function LeaderboardsPage() {
   const [zipcodeRankingData, setZipcodeRankingData] = useState([]);
   const [mostPopularData, setMostPopularData] = useState([]);
 
-  // Fetch data for each category (placeholders for actual API endpoints)
+  const getRecommendedRestaurants = useCallback(async () => {
+    try {
+      // Fetch Recommended Restaurants (route 15.5)
+      const response = await axios.get(`http://${config.server_host}:${config.server_port}/all_restaurants/zip_code/best`)
+      console.log(response.data)
+      setRecommendedData(response.data)
+      console.log(recommendedData);
+    } catch (error) {
+      console.error('Error fetching restaurants', error);
+    }
+   });
+
+  const getZipRank = useCallback(async () => {
+    try {
+      // Fetch Zipcode Ranking (route 11)
+      const response = await axios.get(`http://${config.server_host}:${config.server_port}/zipcode_ranking`)
+      console.log(response.data)
+      setZipcodeRankingData(response.data)
+      console.log(zipcodeRankingData);
+    } catch (error) {
+      console.error('Error fetching zips', error);
+    }
+   });
+
+  const getPopularRestaurants = useCallback(async () => {
+    try {
+      // Fetch Most Popular Restaurants (route 8)
+      const response = await axios.get(`http://${config.server_host}:${config.server_port}/most_popular_restaurants`)
+      console.log(response.data)
+      setMostPopularData(response.data)
+      console.log(mostPopularData);
+    } catch (error) {
+      console.error('Error fetching most popular restaurants', error);
+    }
+   });
+
   useEffect(() => {
-    // Fetch Recommended Restaurants (route 15)
-    fetch(`http://${config.server_host}:${config.server_port}/all_restaurants/zip_code/best`)
-      .then(res => res.json())
-      .then(data => setRecommendedData(data));
+    getRecommendedRestaurants();
+    console.log(recommendedData);
+  }, [recommendedData]);
 
-    // Fetch Zipcode Ranking (route 12)
-    fetch(`http://${config.server_host}:${config.server_port}/zipcode_ranking`)
-      .then(res => res.json())
-      .then(data => setZipcodeRankingData(data));
+  useEffect(() => {
+    getZipRank();
+    console.log(zipcodeRankingData);
+  }, [zipcodeRankingData]);
 
-    // Fetch Most Popular Restaurants (route 8)
-    fetch(`http://${config.server_host}:${config.server_port}/most_popular_restaurants`)
-      .then(res => res.json())
-      .then(data => setMostPopularData(data));
-  }, []);
+  useEffect(() => {
+    getPopularRestaurants();
+    console.log(mostPopularData);
+  }, [mostPopularData]);
 
-  const commonColumns = [
-    { field: 'restaurantName', headerName: 'Restaurant Name', width: 150 },
-    { field: 'totalRev', headerName: 'Total Reviews', width: 100 },
-    { field: 'avgRating', headerName: 'Average Rating', width: 120 },
-    { field: 'zipCode', headerName: 'Zip Code', width: 80 },
-    { field: 'address', headerName: 'Address', width: 80 }
+  const recommendedColumns = [
+    { field: 'BusinessID', headerName: 'ID', width: 80 },
+    { field: 'RestaurantName', headerName: 'Restaurant Name', width: 150 },
+    { field: 'TotalReviews', headerName: 'Total Reviews', width: 100 },
+    { field: 'AverageRating', headerName: 'Average Rating', width: 120 },
+    { field: 'ZipCode', headerName: 'Zip Code', width: 80 },
+    { field: 'Address', headerName: 'Address', width: 150 }
+  ];
+
+  const zipcodeColumns = [
+    { field: 'ZipCode', headerName: 'Zip Code', width: 80 },
+    { field: 'NumberOfRestaurants', headerName: 'Number of Restaurants', width: 150 },
+    { field: 'ZipCodeTotalReviews', headerName: 'Total Reviews', width: 100 },
+    { field: 'ZipCodeAverageRating', headerName: 'Average Rating', width: 120 },
+    { field: 'ZipCodeRank', headerName: 'Rank', width: 80 }
+  ];
+
+  const popularColumns = [
+    { field: 'business_id', headerName: 'ID', width: 80 },
+    { field: 'name', headerName: 'Restaurant Name', width: 150 },
+    { field: 'stars', headerName: 'Number of Restaurants', width: 80 },
+    { field: 'review_count', headerName: 'Total Reviews', width: 100 },
+    { field: 'Address', headerName: 'Address', width: 120 },
+    { field: 'high_rating_review_text', headerName: '4-5 Stars Review', width: 120 },
+    { field: 'mid_rating_review_text', headerName: '2-3 Stars Review', width: 120 },
+    { field: 'low_rating_review_text', headerName: '1 Star Review', width: 120 },
   ];
 
   return (
@@ -46,37 +100,40 @@ export default function LeaderboardsPage() {
     <Container>
       <h2>Leaderboards</h2>
       <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={5}>
           <h3>Best Restaurants in Your Zip!</h3>
           <DataGrid
             rows={recommendedData}
-            columns={commonColumns}
+            columns={recommendedColumns}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
+            getRowId={(row) => row.BusinessID}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={7}>
           <h3>Best Zip Codes for Restaurants!</h3>
           <DataGrid
             rows={zipcodeRankingData}
-            columns={commonColumns}
+            columns={zipcodeColumns}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
+            getRowId={(row) => row.ZipCode}
           />
         </Grid>
         <Grid item xs={12}>
           <h3>Most Popular Restaurants in the U.S.!</h3>
           <DataGrid
             rows={mostPopularData}
-            columns={commonColumns}
+            columns={popularColumns}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
+            getRowId={(row) => row.business_id}
           />
         </Grid>
       </Grid>

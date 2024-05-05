@@ -458,7 +458,7 @@ const most_popular_restaurants = async function(req, res) {
       ORDER BY RES.review_count DESC
       LIMIT 100
       )
-      SELECT MPR.business_id, MPR.name, MPR.address, MPR.stars, MPR.review_count, (SELECT R.text
+      SELECT MPR.business_id as business_id, MPR.name as name, MPR.address as address, MPR.stars as stars, MPR.review_count as review_count, (SELECT R.text
       FROM MostPopularRestaurants MPR
       WHERE MPR.business_id = R.business_id AND R.stars >= 4 LIMIT 1) as high_rating_review_text,
       (SELECT R.text
@@ -482,13 +482,13 @@ const most_popular_restaurants = async function(req, res) {
   } else {
     connection.query(`
       WITH MostPopularRestaurants AS (
-      SELECT RES.business_id, RES.name, RES.address, RES.stars, RES.review_count 
+      SELECT RES.business_id, RES.name, RES.address, RES.stars, RES.review_count
       FROM Restaurants RES
       GROUP BY RES.business_id
       ORDER BY RES.review_count DESC
       LIMIT 100
       )
-      SELECT MPR.business_id, MPR.name, MPR.address, MPR.stars, MPR.review_count, (SELECT R.text
+      SELECT MPR.business_id as business_id, MPR.name as name, MPR.address as address, MPR.stars as stars, MPR.review_count as review_count, (SELECT R.text
       FROM MostPopularRestaurants MPR
       WHERE MPR.business_id = R.business_id AND R.stars >= 4 LIMIT 1) as high_rating_review_text,
       (SELECT R.text
@@ -764,7 +764,6 @@ const restaurants_within_bounds = async function(req, res) {
 }
 
 //Route 15.5: Get restaurants in top 5 zipcodes of all time GET 
-
 const best_restaurants_in_top_zipcodes = async function(req, res) { 
   connection.query(`
       WITH Top5ZipCodes AS (

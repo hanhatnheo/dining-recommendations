@@ -13,10 +13,10 @@ app.use(cors({
 app.get('/random_restaurant', routes.random_restaurant);
 app.get('/random_attraction', routes.random_attraction);
 app.get('/attractions', routes.attractions);
-app.get('/restaurant_recommendations/:id', routes.restaurant_recommendations);
+app.get('/restaurant_recommendations/id', routes.restaurant_recommendations);
 app.get('/all_restaurants', routes.all_restaurants);
-app.get('/restaurant_info/:business_id', routes.restaurant_info);
-app.get('/attraction_info/:attraction_id', routes.attraction_info);
+app.get('/restaurant_info/id', routes.restaurant_info);
+app.get('/attraction_info/id', routes.attraction_info);
 app.get('/most_popular_restaurants', routes.most_popular_restaurants);
 app.get('/best_restaurants_per_category', routes.best_restaurants_per_category);
 app.get('/recommended_attractions', routes.recommended_attractions);
