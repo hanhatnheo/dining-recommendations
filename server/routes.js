@@ -18,7 +18,7 @@ const random_restaurant = async function(req, res) {
   connection.query(`
     SELECT name, stars AS rating, address
     FROM Restaurants R
-    WHERE R.latitude BETWEEN -100 AND 100 AND R.longitude BETWEEN -100 AND 100 
+    WHERE stars > 3 AND R.latitude BETWEEN -100 AND 100 AND R.longitude BETWEEN -100 AND 100 
     ORDER by RAND()
     LIMIT 1 
   `, (err, data) => {
