@@ -764,7 +764,7 @@ const restaurants_within_bounds = async function(req, res) {
   }
 }
 
-//Route 15.5: Get restaurants in top 5 zipcodes of all time 
+//Route 15.5: Get restaurants in top 5 zipcodes of all time GET 
 
 const best_restaurants_in_top_zipcodes = async function(req, res) { 
   connection.query(`
@@ -802,7 +802,7 @@ const zip_generator = async function(req, res) {
 
   connection.query(`
     SELECT longitude, latitude
-    FROM LongLatLookup
+    FROM LongLatLookUp
     WHERE postal_code = ${userZipCode}
   `, (err, data) => {
     if (err || data.length === 0) {

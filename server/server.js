@@ -25,7 +25,7 @@ app.get('/zipcode_ranking', routes.zipcode_ranking);
 app.get('/attractions/current', routes.attractions_within_bounds);
 app.get('/all_restaurants/current', routes.restaurants_within_bounds);
 app.get('/zip_generator/:zip_code', routes.zip_generator);
-app.get('/all_restaurants/best', routes.best_restaurants_in_top_zipcodes);
+app.get('/all_restaurants/zip_code/best', routes.best_restaurants_in_top_zipcodes);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

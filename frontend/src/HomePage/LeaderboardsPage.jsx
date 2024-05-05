@@ -18,7 +18,7 @@ export default function LeaderboardsPage() {
   // Fetch data for each category (placeholders for actual API endpoints)
   useEffect(() => {
     // Fetch Recommended Restaurants (route 15)
-    fetch(`http://${config.server_host}:${config.server_port}/recommended_restaurants`)
+    fetch(`http://${config.server_host}:${config.server_port}/all_restaurants/zip_code/best`)
       .then(res => res.json())
       .then(data => setRecommendedData(data));
 
