@@ -764,6 +764,24 @@ const restaurants_within_bounds = async function(req, res) {
   }
 }
 
+// Route 16: GET /zipgenerator/:zip_code
+const zip_generator = async function(req, res) {
+  const userZipCode = req.params.zip_code;
+
+  connection.query(`
+    SELECT longitude, latitude
+    FROM LongLatLookup
+    WHERE zip_code = ?
+  `, [userZipCode], (err, data) => {
+    if (err || data.length === 0) {
+      console.log(err);
+      res.json({ error: 'No data found or query error' });
+    } else {
+      res.json(data[0]); // Assuming the query returns one row
+    }
+  });
+}
+
 module.exports = {
   random_restaurant,
   random_attraction,
@@ -778,5 +796,6 @@ module.exports = {
   recommended_restaurants,
   zipcode_ranking,
   attractions_within_bounds,
-  restaurants_within_bounds
+  restaurants_within_bounds,
+  zip_generator
 }
