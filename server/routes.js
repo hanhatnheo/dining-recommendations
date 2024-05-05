@@ -803,6 +803,7 @@ const zip_generator = async function(req, res) {
     SELECT longitude, latitude
     FROM LongLatLookUp
     WHERE postal_code = ${userZipCode}
+    LIMIT 1;
   `, (err, data) => {
     if (err || data.length === 0) {
       console.log(err);

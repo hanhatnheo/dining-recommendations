@@ -43,7 +43,7 @@ const Intro = () => {
   return (
     <div className="intro-page">
       <h1>Welcome to PennEats!</h1>
-      <h2> <em> Made with coffee by Team 73 </em></h2>
+      <h2> <em> Made with coffee by Team 74 </em></h2>
       <div className="search-bar">
         <input
           type="text"

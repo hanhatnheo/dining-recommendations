@@ -29,6 +29,17 @@ const rectangleGeoJSON = {
   }
 };
 
+// control panel layer stuff
+const handleToggleLayer = (layer) => {
+  if (layer === 'markers') {
+    setShowMarkers(!showMarkers);
+  }
+};
+
+const handleChangeStyle = (style) => {
+  setMapStyle(style);
+};
+
 const Map = ({ initialCoordinates }) => {
     const mapRef = React.useRef(null);
     const mapContainerRef = React.useRef(null);
