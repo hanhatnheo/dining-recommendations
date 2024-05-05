@@ -25,7 +25,10 @@ export default function SongsPage() {
   const [drinkQ, setDrinkQ] = useState([-25, 25]);
   const [serviceQ, setServiceQ] = useState([-25, 25]);
   const [valuePerD, setValuePerD] = useState([-25, 25]);
+
+  //random restaurant + attarction
   const [restaurant, setRestaurant] = useState(null); 
+  const [attraction, setAttraction] = useState(null); 
 
   useEffect(() => {
     fetchRandomRestaurant();
@@ -42,6 +45,24 @@ export default function SongsPage() {
       })
       .catch(error => {
         console.error('Error fetching random restaurant:', error);
+      });
+  };
+
+  useEffect(() => {
+    fetchRandomAttraction();
+  }, []);
+
+  const fetchRandomAttraction = () => {
+    fetch(`http://${config.server_host}:${config.server_port}/random_attraction`)
+      .then(res => res.json())
+      .then(resJson => {
+        // Extracting variables
+        const { name1, address1, website1 } = resJson;
+        // Setting state with fetched data
+        setAttraction({ name1, address1, website1});
+      })
+      .catch(error => {
+        console.error('Error fetching random attraction:', error);
       });
   };
 
@@ -186,6 +207,12 @@ export default function SongsPage() {
           {restaurant && (
           <div style={{ backgroundColor: '#778EBC', borderRadius: '10px', padding: '10px' }}>
             Restaurant of the day: {restaurant.name}, {restaurant.rating} stars, {restaurant.address}
+          </div> )}
+        </Grid>
+        <Grid item xs={12} style={{ marginTop: '20px' }}>
+          {attraction && (
+          <div style={{ backgroundColor: '#CDCBB8', borderRadius: '10px', padding: '10px' }}>
+            Attraction of the day: {attraction.name}, {restaurant.address}, {restaurant.website}
           </div> )}
         </Grid>
       </Container>

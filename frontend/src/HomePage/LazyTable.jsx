@@ -43,7 +43,7 @@ const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
           {data.map((row, idx) => (
             <TableRow key={idx}>
               {columns.map((col) => (
-                <TableCell key={col.headerName}>
+                <TableCell key={col.headerName} className="whiteBackgroundCell">
                   {col.renderCell ? col.renderCell(row) : defaultRenderCell(col, row)}
                 </TableCell>
               ))}

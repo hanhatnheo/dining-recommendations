@@ -40,7 +40,7 @@ const random_restaurant = async function(req, res) {
 // Route 2: GET /random_attraction
 const random_attraction = async function(req, res) {
   connection.query(`
-    SELECT *
+    SELECT A.name, A.address, A.website
     FROM Attractions A
     WHERE (type = 'viewpoint' OR type = 'museum' OR type = 'park'
     OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
@@ -645,7 +645,7 @@ const restaurants_within_bounds = async function(req, res) {
   }
 }
 
-//Route 15.5: Get restaurants in top 5 zipcodes of all time GET 
+//Route 15.5: Get restaurants in top 5 zipcodes of all time GET /all_restaurants/zip_code/best
 const best_restaurants_in_top_zipcodes = async function(req, res) { 
   connection.query(`
       WITH Top5ZipCodes AS (
