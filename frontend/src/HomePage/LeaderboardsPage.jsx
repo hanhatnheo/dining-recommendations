@@ -137,7 +137,7 @@ export default function LeaderboardsPage() {
         <h2>Leaderboards</h2>
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <h3>Best Restaurants in Your Zip!</h3>
+            <h3>Top 5 Restaurants Per ZIP Code!</h3>
             <DataGrid
               rows={recommendedData}
               columns={recommendedColumns}
@@ -151,7 +151,7 @@ export default function LeaderboardsPage() {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <h3>Best Zip Codes for Restaurants!</h3>
+            <h3>Best ZIP Codes for Restaurants!</h3>
             <DataGrid
               rows={zipcodeRankingData}
               columns={zipcodeColumns}
