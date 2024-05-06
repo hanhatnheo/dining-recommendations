@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Sidebar = ({ attractionsDetails }) => {
     if (attractionsDetails.length === 0) {
-        return <div className="sidebar" style={sidebarStyle}>Click on attractions to see recommendations.</div>;
+        return <div className="sidebar" style={sidebarStyle}>Click on attractions to see recommendations!</div>;
     }
 
     return (

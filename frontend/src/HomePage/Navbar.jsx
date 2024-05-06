@@ -42,7 +42,7 @@ const Navbar = () => {
 */
 return (
   <nav style={navbarStyles}>
-    <div style={brandStyles}>Explore&Eat</div>
+    <div style={brandStyles}><Link style={brandStyles} to="/">Explore&Eat</Link></div>
     <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
       <li>
         <Link to="/home" style={linkStyles}>
