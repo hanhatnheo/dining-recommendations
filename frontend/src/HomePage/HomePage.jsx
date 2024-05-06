@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import "mapbox-gl/dist/mapbox-gl.css";
 import Navbar from './Navbar';

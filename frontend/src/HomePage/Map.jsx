@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactMapGL, { NavigationControl, Source, Layer } from "react-map-gl";
+import ReactMapGL, { NavigationControl } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import ControlPanel from './ControlPanel';
 import { Markers } from './Markers';
