@@ -31,7 +31,7 @@ const Navbar = () => {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <NavText href='/' text='PennEats' isMain />
+          <NavText href='/' text='Explore&Eat' isMain />
           <NavText href='/restaurants' text='All Restaurants' />
         </Toolbar>
       </Container>
@@ -42,7 +42,7 @@ const Navbar = () => {
 */
 return (
   <nav style={navbarStyles}>
-    <div style={brandStyles}>Penn Eats</div>
+    <div style={brandStyles}>Explore&Eat</div>
     <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
       <li>
         <Link to="/home" style={linkStyles}>
