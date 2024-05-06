@@ -50,7 +50,7 @@ const Intro = () => {
           placeholder="Enter zip code"
           value={zipCode}
           onChange={(e) => setZipCode(e.target.value)}
-          style={{backgroundColor: "white"}}
+          style={{backgroundColor: "white", color: "black"}}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
