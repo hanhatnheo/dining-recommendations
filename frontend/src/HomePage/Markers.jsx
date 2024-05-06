@@ -141,8 +141,7 @@ export const Markers = ({ attractionsDetails, setAttractionsDetails }) => {
                         <div style={{ padding: '10px', borderRadius: '10px', color: 'black', overflowWrap: 'break-word', wordWrap: 'break-word'  }}>
                             <h3>{selectedMarker.name}</h3>
                                 <span>Type: {selectedMarker.type}</span>
-                                <span>Website:  
-                                {selectedMarker.website && selectedMarker.website !== 'Unknown' ? 
+                                <span>Website: {selectedMarker.website && selectedMarker.website !== 'Unknown' ? 
                                     <a href={selectedMarker.website} target="_blank" rel="noopener noreferrer">{selectedMarker.website}</a> :
                                     ' Unknown'
                                 }</span>
