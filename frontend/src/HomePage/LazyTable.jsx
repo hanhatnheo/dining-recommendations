@@ -32,10 +32,10 @@ const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
   };
 
   return (
-    <TableContainer sx={{ backgroundColor: 'white' }}>
-      <Table sx={{ backgroundColor: 'white' }}>
+    <TableContainer>
+      <Table>
         <TableHead>
-          <TableRow sx={{ bgcolor: 'white' }}>
+          <TableRow>
             {columns.map(col => <TableCell key={col.headerName}>{col.headerName}</TableCell>)}
           </TableRow>
         </TableHead>
