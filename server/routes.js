@@ -40,13 +40,14 @@ const random_restaurant = async function(req, res) {
 // Route 2: GET /random_attraction
 const random_attraction = async function(req, res) {
   connection.query(`
-    SELECT A.name, A.address, A.website
+    SELECT A.name, A.type
     FROM Attractions A
     WHERE (type = 'viewpoint' OR type = 'museum' OR type = 'park'
     OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
     OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
     OR type = 'attraction') 
     AND A.latitude BETWEEN -100 AND 100 AND A.longitude BETWEEN -100 AND 100 
+    ORDER by RAND()
     LIMIT 1 OFFSET 1;
   `, (err, data) => {
     if (err || data.length === 0) {
@@ -56,8 +57,6 @@ const random_attraction = async function(req, res) {
       res.json({
         name: data[0].name,
         type: data[0].type,
-        longitude: data[0].longitude,
-        latitude: data[0].latitude,
         website: data[0].website,
       });
     }

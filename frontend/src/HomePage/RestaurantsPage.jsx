@@ -57,9 +57,9 @@ export default function SongsPage() {
       .then(res => res.json())
       .then(resJson => {
         // Extracting variables
-        const { name1, address1, website1 } = resJson;
+        const { name, type} = resJson;
         // Setting state with fetched data
-        setAttraction({ name1, address1, website1});
+        setAttraction({ name, type});
       })
       .catch(error => {
         console.error('Error fetching random attraction:', error);
@@ -212,7 +212,7 @@ export default function SongsPage() {
         <Grid item xs={12} style={{ marginTop: '20px' }}>
           {attraction && (
           <div style={{ backgroundColor: '#CDCBB8', borderRadius: '10px', padding: '10px' }}>
-            Attraction of the day: {attraction.name}, {restaurant.address}, {restaurant.website}
+            Attraction of the day: {attraction.name}, {attraction.type}
           </div> )}
         </Grid>
       </Container>
