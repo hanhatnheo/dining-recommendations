@@ -173,6 +173,7 @@ export default function LeaderboardsPage() {
         </Grid>
         <Grid item xs={12} md={6}>
           <h3>Most Popular Restaurants in Your Zip!</h3>
+          <div className="zipcode-input">
           <TextField
           label="Enter Your Zip Code"
           variant="outlined"
@@ -183,6 +184,7 @@ export default function LeaderboardsPage() {
         <Button onClick={getPopularRestaurants} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
           Search
         </Button>
+        </div>
           <DataGrid
             rows={mostPopularData}
             columns={popularColumns}
@@ -200,6 +202,7 @@ export default function LeaderboardsPage() {
         </Grid>
         <Grid item xs={12} md={6}>
             <h3>Best Restaurants Per Category!</h3>
+            <div className="zipcode-input">
             <TextField 
               label="Enter Your Zip Code"
               variant="outlined"
@@ -210,6 +213,7 @@ export default function LeaderboardsPage() {
             <Button onClick={getBestRestaurantsPerCategory} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
               Search
             </Button>
+            </div>
             <DataGrid
               rows={bestRestaurantsPerCategoryData}
               columns={bestRestaurantsPerCategoryColumns}

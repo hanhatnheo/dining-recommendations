@@ -90,3 +90,19 @@
 .MuiDataGrid-root {
   background-color: white !important;
 }
+
+/* For LeaderboardsPage.jsx */
+.zipcode-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  margin-left: 130px;
+}
+
+.zipcode-input button {
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
