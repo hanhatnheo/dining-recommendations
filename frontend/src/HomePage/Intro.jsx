@@ -42,14 +42,15 @@ const Intro = () => {
 
   return (
     <div className="intro-page">
-      <h1>Welcome to Explore&Eat!</h1>
-      <h2> <em> Made with coffee by Team 74 </em></h2>
+      <h1 style={{color: "brown"}}>Welcome to Explore&Eat!</h1>
+      <h2 style={{ color: "black"}}> <em> Made with coffee by Team 74 </em></h2>
       <div className="search-bar">
         <input
           type="text"
           placeholder="Enter zip code"
           value={zipCode}
           onChange={(e) => setZipCode(e.target.value)}
+          style={{backgroundColor: "white"}}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
