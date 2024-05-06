@@ -14,6 +14,7 @@ const ControlPanel = ({ markerType, setMarkerType, mapStyle, setMapStyle }) => {
       width: '150px',
       color: 'black',
       fontSize: '12px', 
+      paddingBottom: '20px',
       borderRadius: '5px', 
       boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
     }}>
