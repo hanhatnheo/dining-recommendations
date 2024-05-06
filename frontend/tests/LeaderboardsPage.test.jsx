@@ -21,7 +21,6 @@ describe('LeaderboardsPage', () => {
       render(<MemoryRouter><LeaderboardsPage /></MemoryRouter>);
   
       await screen.findByText('Pizza Place'); 
-      expect(screen.getByText('Pizza Place')).toBeInTheDocument();
       expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('all_restaurants/zip_code/best'));
     });
 
