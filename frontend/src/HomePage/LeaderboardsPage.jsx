@@ -18,6 +18,7 @@ export default function LeaderboardsPage() {
   const [mostPopularData, setMostPopularData] = useState([]);
   const [bestRestaurantsPerCategoryData, setBestRestaurantsPerCategoryData] = useState([]);
   const [zipCodeFilter, setZipCodeFilter] = useState('');
+  const [categoryZipCodeFilter, setCategoryZipCodeFilter] = useState('');
 
   const getRecommendedRestaurants = useCallback(async () => {
     try {
@@ -67,8 +68,8 @@ export default function LeaderboardsPage() {
   const getBestRestaurantsPerCategory = useCallback(async () => {
     try {
       // Fetch Best Restaurants Per Category (route 9)
-      const url = zipCodeFilter
-        ? `http://${config.server_host}:${config.server_port}/best_restaurants_per_category?zip_code=${zipCodeFilter}`
+      const url = categoryZipCodeFilter
+        ? `http://${config.server_host}:${config.server_port}/best_restaurants_per_category?zip_code=${categoryZipCodeFilter}`
         : `http://${config.server_host}:${config.server_port}/best_restaurants_per_category`;
 
       console.log('clicked')
@@ -83,7 +84,7 @@ export default function LeaderboardsPage() {
     } catch (error) {
       console.error('Error fetching best restaurants per category', error);
     }
-  }, [zipCodeFilter]);
+  }, [categoryZipCodeFilter]);
 
   useEffect(() => {
     getRecommendedRestaurants();
@@ -171,7 +172,7 @@ export default function LeaderboardsPage() {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <h3>Most Popular Restaurants in the U.S.!</h3>
+          <h3>Most Popular Restaurants in Your Zip!</h3>
           <TextField
           label="Enter Your Zip Code"
           variant="outlined"
@@ -202,8 +203,8 @@ export default function LeaderboardsPage() {
             <TextField 
               label="Enter Your Zip Code"
               variant="outlined"
-              value={zipCodeFilter}
-              onChange={(e) => setZipCodeFilter(e.target.value)}
+              value={categoryZipCodeFilter}
+              onChange={(e) => setCategoryZipCodeFilter(e.target.value)}
               style={{ marginBottom: '20px', backgroundColor: 'white', position: "center" }}
             />
             <Button onClick={getBestRestaurantsPerCategory} variant="contained" color="primary" style={{ marginBottom: '20px' }}>

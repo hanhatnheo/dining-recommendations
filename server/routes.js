@@ -719,7 +719,7 @@ const best_restaurants_in_top_zipcodes = async function(req, res) {
       WITH Top5ZipCodes AS (
       SELECT ZipCode
       FROM TopZipCodes
-      LIMIT 5),
+      LIMIT 50),
       Top5RestaurantsPerZip AS (SELECT
       R.business_id AS BusinessID,
       R.name AS RestaurantName,
@@ -732,9 +732,15 @@ const best_restaurants_in_top_zipcodes = async function(req, res) {
       INNER JOIN Top5ZipCodes TZC ON R.zip_code = TZC.ZipCode
       )
       SELECT *
-      FROM Top5RestaurantsPerZip
+      FROM Top5RestaurantsPerZip T
       WHERE RestaurantRank <= 5
-      ORDER BY ZipCode, RestaurantRank;`
+      AND EXISTS (
+        SELECT 1
+        FROM Reviews REV
+        WHERE REV.business_id = T.BusinessID
+        AND REV.stars >= 3
+    )
+      ORDER BY ZipCode, AverageRating DESC;`
       , (err, data) => {
       if (err || data.length === 0) {
         console.log(err);

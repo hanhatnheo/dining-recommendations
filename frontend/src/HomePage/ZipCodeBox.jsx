@@ -60,15 +60,4 @@ async function getCoordinatesFromZip(zip) {
     }
   }
 
-/*
-async function getCoordinatesFromZip(zip) {
-  const apiKey = 'zipapi'; //insert actual api key here
-  const url = `https://api.zipapi.example.com/zip?apikey=${apiKey}&code=${zip}`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error('Network response was not ok.');
-  const data = await response.json();
-  return { latitude: data.latitude, longitude: data.longitude };
-}
-*/
-
 export default ZipCodeBox;
