@@ -26,20 +26,6 @@ const Navbar = () => {
     fontWeight: 'bold',
   };
 
-  /*
-  return (
-    <AppBar position='static'>
-      <Container maxWidth='xl'>
-        <Toolbar disableGutters>
-          <NavText href='/' text='Explore&Eat' isMain />
-          <NavText href='/restaurants' text='All Restaurants' />
-        </Toolbar>
-      </Container>
-    </AppBar>
-  );
-}
-<NavText href='/songs' text='SONGS' /> this goes under 'All Restaurants'
-*/
 return (
   <nav style={navbarStyles}>
     <div style={brandStyles}><Link style={brandStyles} to="/">Explore&Eat</Link></div>
