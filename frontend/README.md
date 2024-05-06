@@ -1,3 +1,8 @@
+# Explore&Eat
+# Description
+
+With this web app, users can choose an attraction and then find nearby restaurants to simplify the process of pairing popular attractions next to popular restaurants quickly for things like dates, vacations, etc. It allows users to find information about the best attractions in their preferred zip-code, and helps them filter restaurants with complex parameters like combinations of average rating, ambience, value, and distance to attractions. We also highlight a series of leader boards, such as the best attraction-restaurant combinations in ZIP codes across the world. 
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
@@ -13,12 +18,18 @@ To install this project, follow these steps:
    ```bash
    git clone https://github.com/hanhatnheo/dining-recommendations.git
    ```
-2. Navigate to the project directory:
+2. Unzip the folder.
+3. Open a new terminal and cd into the frontend folder:
    ```bash
    cd dining-recommendations
    cd frontend
    ```
-3. Install dependencies:
+4. Open a new terminal and cd into the server folder:
+   ```bash
+   cd dining-recommendations
+   cd server
+   ```
+5. Install dependencies in both terminals:
    ```bash
    npm install
    ```
