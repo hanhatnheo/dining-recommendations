@@ -1,3 +1,4 @@
+import React from 'react';
 import { UseMap } from "./UseMap";
 import { Marker, Popup, useMap } from "react-map-gl";
 import { useState, useEffect, useCallback } from "react";
@@ -53,7 +54,9 @@ export const Markers = ({ attractionsDetails, setAttractionsDetails }) => {
                 params: { id },
                 mode: 'no-cors'
             });
-        setRecommendedRestaurants(recommendedRestaurants.concat(response.data))
+        if (response) {
+            setRecommendedRestaurants(recommendedRestaurants.concat(response.data))
+        }
         console.log(recommendedRestaurants);
     }
 
@@ -106,7 +109,7 @@ export const Markers = ({ attractionsDetails, setAttractionsDetails }) => {
     }, [map, map.getZoom()]);
 
     useEffect(() => {
-        if (attractionsDetails.length > 0) {
+        if (attractionsDetails && attractionsDetails.length > 0) {
             setAttractionsDetails([]);
         }
         updateAttractionDetails();
@@ -168,14 +171,21 @@ export const Markers = ({ attractionsDetails, setAttractionsDetails }) => {
                     offsetLeft={-20}
                     closeButton={true}
                     onClose={() => {
-                        setSelectedMarkers(r.filter(marker => marker.name !== r.name && marker.latitude !== r.latitude && marker.longitude !== r.longitude))
+                        setSelectedRestaurants(selectedRestaurants.filter(marker => marker.name !== r.name && marker.latitude !== r.latitude && marker.longitude !== r.longitude))
                     }}
                     closeOnClick={false}
                     anchor="top">
                         <div style={{ padding: '10px', borderRadius: '10px', color: 'black' }}>
                             <h3>{r.name}</h3> 
                                 <span>Stars: {r.stars}</span>
-                                <span>Address: {r.address}</span>
+                                                        <div>
+                        {r.food_score && <span>Food Score: {r.food_score}</span>}
+                        {r.drink_score && <span>, Drink Score: {r.drink_score}</span>}
+                        <br/>
+                        {r.service_score && <span>Service Score: {r.service_score}</span>}
+                        {r.value_score && <span>, Value Score: {r.value_score}</span>}
+                        </div>
+                    <span>Address: {r.address}</span>
                         </div>
                 </Popup>
             )

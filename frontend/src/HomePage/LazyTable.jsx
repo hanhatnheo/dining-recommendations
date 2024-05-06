@@ -41,9 +41,7 @@ const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
         </TableHead>
         <TableBody>
           {data.map((row, idx) => (
-            <TableRow sx={{ '.MuiDataGrid-row': {
-              backgroundColor: 'white !important'
-            } }} key={idx}>
+            <TableRow key={idx}>
               {columns.map((col) => (
                 <TableCell key={col.headerName}>
                   {col.renderCell ? col.renderCell(row) : defaultRenderCell(col, row)}

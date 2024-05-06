@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const MarkerIcon = () => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,6 +8,7 @@ export const MarkerIcon = () => (
       fill=""
       viewBox="0 0 24 24"
       stroke="#3eb8db"
+      aria-label='svg'
     >
       <path
         strokeLinecap="round"

@@ -51,13 +51,9 @@ export default function LeaderboardsPage() {
         ? `http://${config.server_host}:${config.server_port}/most_popular_restaurants?zip_code=${zipCodeFilter}`
         : `http://${config.server_host}:${config.server_port}/most_popular_restaurants`;
 
-      console.log('clicked')
-
       console.log(url);
 
       const response = await axios.get(url);
-      console.log('Most popular')
-      console.log(response.data)
       setMostPopularData(response.data)
       console.log(mostPopularData);
     } catch (error) {
@@ -72,13 +68,9 @@ export default function LeaderboardsPage() {
         ? `http://${config.server_host}:${config.server_port}/best_restaurants_per_category?zip_code=${categoryZipCodeFilter}`
         : `http://${config.server_host}:${config.server_port}/best_restaurants_per_category`;
 
-      console.log('clicked')
-
       console.log(url);
 
       const response = await axios.get(url);
-      console.log('Best restaurants per category')
-      console.log(response.data)
       setBestRestaurantsPerCategoryData(response.data)
       console.log(bestRestaurantsPerCategoryData);
     } catch (error) {
@@ -180,8 +172,9 @@ export default function LeaderboardsPage() {
           value={zipCodeFilter}
           onChange={(e) => setZipCodeFilter(e.target.value)}
           style={{ marginBottom: '20px', backgroundColor: 'white' }}
+          inputProps={{"data-testid":'zip-input'}}
         />
-        <Button onClick={getPopularRestaurants} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+        <Button data-testid="search-button" onClick={getPopularRestaurants} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
           Search
         </Button>
         </div>
@@ -209,8 +202,9 @@ export default function LeaderboardsPage() {
               value={categoryZipCodeFilter}
               onChange={(e) => setCategoryZipCodeFilter(e.target.value)}
               style={{ marginBottom: '20px', backgroundColor: 'white', position: "center" }}
+              inputProps={{"data-testid":'category-zip'}}
             />
-            <Button onClick={getBestRestaurantsPerCategory} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+            <Button data-testid="category-button" onClick={getBestRestaurantsPerCategory} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
               Search
             </Button>
             </div>

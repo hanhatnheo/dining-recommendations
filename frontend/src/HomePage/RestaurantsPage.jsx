@@ -14,7 +14,7 @@ var bgColors = {
   "Default": "#DFDEE5"
 };
 
-export default function SongsPage() {
+export default function RestaurantsPage() {
   const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState([]);
 
@@ -112,6 +112,7 @@ export default function SongsPage() {
             alignItems="center">
             <Grid item xs={12}>
               <TextField
+                inputProps={{"data-testid":'name-change'}}
                 label="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -127,6 +128,7 @@ export default function SongsPage() {
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 fullWidth
+                inputProps={{"data-testid":'zip-input'}}
                 InputProps={{
                   style: { backgroundColor: 'white', borderRadius: '4px' }, // Set background color and border radius
                 }}
@@ -140,6 +142,7 @@ export default function SongsPage() {
                 min={0}
                 max={5}
                 aria-labelledby="stars-slider"
+                data-testid="stars-slider"
               />
               <p style={{color: "black"}}>Stars</p>
             </Grid>
@@ -188,7 +191,11 @@ export default function SongsPage() {
               <p style={{color: "black"}}>Value Per Dollar</p>
             </Grid>
             <Grid item xs={12}>
-              <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
+              <Button 
+              variant="contained" 
+              onClick={search} 
+              style={{ marginTop: 20 }}
+              data-testid="button">
                 Search
               </Button>
             </Grid>

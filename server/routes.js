@@ -149,7 +149,8 @@ const restaurant_recommendations = async function(req, res) {
   const numRecs = 5;
   
   connection.query(`
-    SELECT R.name, R.stars, R.address, R.latitude, R.longitude, N.attraction_id
+    SELECT R.name, R.stars, R.address, R.latitude, R.longitude, N.attraction_id, R.drink_score, R.value_score, R.service_score,
+    R.food_score
     FROM Nearby N JOIN Restaurants R ON N.business_id = R.business_id
     WHERE N.attraction_id = '${id}' AND R.stars >= '${rating}' AND 
     R.drink_score >= '${drinkScore}' AND R.value_score >= '${valueScore}' AND
@@ -582,7 +583,7 @@ const attractions_within_bounds = async function(req, res) {
 
 // Route 13: GET /all_restaurants/current
 const restaurants_within_bounds = async function(req, res) {
-  const name = req.query.name ?? '';
+  const id = req.query.id ?? '';
   const rating = req.query.rating ?? 0;
   const drinkScore = req.query.drink_score ?? -25;
   const valueScore = req.query.value_score ?? -25;
@@ -595,7 +596,7 @@ const restaurants_within_bounds = async function(req, res) {
   const maxLat = req.query.maxLat;
   const maxLng = req.query.maxLng;
 
-  if (name === '') {
+  if (id === '') {
     if (category === '') {
       connection.query(`
         WITH ReviewsWithTheirRestaurants AS (
@@ -682,7 +683,7 @@ const restaurants_within_bounds = async function(req, res) {
       FROM Restaurants RES
       JOIN Reviews REV ON RES.business_id = REV.business_id)
     
-      SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars,
+      SELECT R.business_id, R.name, R.address, R.latitude, R.longitude, R.stars, R.food_score, R.drink_score, R.service_score, R.value_score,
             (SELECT RWR.text
               FROM ReviewsWithTheirRestaurants RWR
               WHERE R.business_id = RWR.business_id
@@ -700,7 +701,7 @@ const restaurants_within_bounds = async function(req, res) {
                 AND stars <= 1
               LIMIT 1) as low_rating_review_text
       FROM Restaurants R
-      WHERE R.name = '${name}' AND R.address LIKE '%${zipcode}' AND R.latitude BETWEEN '${minLat}' AND '${maxLat}' AND R.longitude BETWEEN '${minLng}' AND '${maxLng}';
+      WHERE R.id = '${id}' AND R.address LIKE '%${zipcode}' AND R.latitude BETWEEN '${minLat}' AND '${maxLat}' AND R.longitude BETWEEN '${minLng}' AND '${maxLng}';
       `
       , (err, data) => {
       if (err || data.length === 0) {

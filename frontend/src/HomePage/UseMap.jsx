@@ -1,5 +1,5 @@
 import { useMap } from "react-map-gl"
-import { useMemo, useEffect, useState } from "react"
+import React, { useMemo, useEffect, useState } from "react"
 
 export const UseMap = () => {
   const { current: map } = useMap()
