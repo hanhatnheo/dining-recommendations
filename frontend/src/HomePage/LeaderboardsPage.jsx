@@ -141,7 +141,9 @@ export default function LeaderboardsPage() {
           <DataGrid
             rows={recommendedData}
             columns={recommendedColumns}
-            pageSize={pageSize}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 25 } },
+            }}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
@@ -183,7 +185,9 @@ export default function LeaderboardsPage() {
           <DataGrid
             rows={mostPopularData}
             columns={popularColumns}
-            pageSize={pageSize}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 25 } },
+            }}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
