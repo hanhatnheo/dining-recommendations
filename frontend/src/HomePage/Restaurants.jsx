@@ -35,7 +35,6 @@ export const Restaurants = () => {
         fetchDataInBounds(bounds);
     }, [bounds])
 
-    
     return (
         <>
         {markers.map(({ ...marker }) => {

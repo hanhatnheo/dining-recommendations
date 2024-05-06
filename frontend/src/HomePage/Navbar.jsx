@@ -42,7 +42,7 @@ const Navbar = () => {
 */
 return (
   <nav style={navbarStyles}>
-    <div style={brandStyles}>Penn Eats</div>
+    <div style={brandStyles}>Explore&Eats</div>
     <ul style={{ listStyle: 'none', display: 'flex', alignItems: 'center' }}>
       <li>
         <Link to="/home" style={linkStyles}>

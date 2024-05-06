@@ -10,7 +10,7 @@ import config from '../../../server/config.json';
 import axios from 'axios';
 
 export default function LeaderboardsPage() {
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(25);
 
   // Assuming different data sets for each leaderboard category
   const [recommendedData, setRecommendedData] = useState([]);
@@ -111,8 +111,10 @@ export default function LeaderboardsPage() {
           <DataGrid
             rows={recommendedData}
             columns={recommendedColumns}
-            pageSize={pageSize}
             onPageSizeChange={setPageSize}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 25 } },
+            }}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
             getRowId={(row) => row.BusinessID}
@@ -147,7 +149,9 @@ export default function LeaderboardsPage() {
           <DataGrid
             rows={mostPopularData}
             columns={popularColumns}
-            pageSize={pageSize}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 25 } },
+            }}
             onPageSizeChange={setPageSize}
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
