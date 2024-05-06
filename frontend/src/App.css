@@ -86,3 +86,7 @@
 .whiteBackgroundCell {
   background-color: white;
 }
+
+.MuiDataGrid-root {
+  background-color: white !important;
+}

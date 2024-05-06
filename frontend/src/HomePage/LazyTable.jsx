@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
-import './LazyTable.css';
 
 const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
   const [data, setData] = useState([]);
@@ -33,18 +32,20 @@ const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
   };
 
   return (
-    <TableContainer>
-      <Table>
+    <TableContainer sx={{ backgroundColor: 'white' }}>
+      <Table sx={{ backgroundColor: 'white' }}>
         <TableHead>
-          <TableRow className="whiteBackgroundCell">
+          <TableRow sx={{ bgcolor: 'white' }}>
             {columns.map(col => <TableCell key={col.headerName}>{col.headerName}</TableCell>)}
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map((row, idx) => (
-            <TableRow key={idx}>
+            <TableRow sx={{ '.MuiDataGrid-row': {
+              backgroundColor: 'white !important'
+            } }} key={idx}>
               {columns.map((col) => (
-                <TableCell key={col.headerName} className="whiteBackgroundCell">
+                <TableCell key={col.headerName}>
                   {col.renderCell ? col.renderCell(row) : defaultRenderCell(col, row)}
                 </TableCell>
               ))}
