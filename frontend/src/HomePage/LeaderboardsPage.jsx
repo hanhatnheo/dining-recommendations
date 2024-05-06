@@ -115,7 +115,7 @@ export default function LeaderboardsPage() {
   const popularColumns = [
     { field: 'business_id', headerName: 'ID', width: 80 },
     { field: 'name', headerName: 'Restaurant Name', width: 100 },
-    { field: 'stars', headerName: 'Number of Restaurants', width: 80 },
+    { field: 'stars', headerName: 'Average Rating', width: 80 },
     { field: 'review_count', headerName: 'Total Reviews', width: 80 },
     { field: 'address', headerName: 'Address', width: 200 },
     { field: 'high_rating_review_text', headerName: '4-5 Stars Review', width: 150 },

@@ -96,7 +96,7 @@ export default function SongsPage() {
     { field: 'drink_score', headerName: 'Drink', width: 75 },
     { field: 'service_score', headerName: 'Service', width: 75 },
     { field: 'value_score', headerName: 'Value', width: 75 },
-    { field: 'review_text', headerName: 'Review', width: 300 }
+    { field: 'review_text', headerName: 'Review Preview', width: 300 }
   ];
 
   return (
