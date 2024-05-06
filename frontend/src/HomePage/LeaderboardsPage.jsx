@@ -118,9 +118,9 @@ export default function LeaderboardsPage() {
     { field: 'stars', headerName: 'Average Rating', width: 80 },
     { field: 'review_count', headerName: 'Total Reviews', width: 80 },
     { field: 'address', headerName: 'Address', width: 200 },
-    { field: 'high_rating_review_text', headerName: '4-5 Stars Review', width: 150 },
-    { field: 'mid_rating_review_text', headerName: '2-3 Stars Review', width: 150 },
-    { field: 'low_rating_review_text', headerName: '1 Star Review', width: 150 },
+    { field: 'high_rating_review_text', headerName: '4-5 Stars Review', width: 500 },
+    { field: 'mid_rating_review_text', headerName: '2-3 Stars Review', width: 500 },
+    { field: 'low_rating_review_text', headerName: '1 Star Review', width: 500 },
   ];
 
   const bestRestaurantsPerCategoryColumns = [
