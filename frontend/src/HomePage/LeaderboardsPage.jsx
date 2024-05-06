@@ -146,6 +146,9 @@ export default function LeaderboardsPage() {
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
             getRowId={(row) => row.BusinessID}
+            style={{
+              background: 'white'
+            }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -160,6 +163,9 @@ export default function LeaderboardsPage() {
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
             getRowId={(row) => row.ZipCode}
+            style={{
+              background: 'white'
+            }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
@@ -169,7 +175,7 @@ export default function LeaderboardsPage() {
           variant="outlined"
           value={zipCodeFilter}
           onChange={(e) => setZipCodeFilter(e.target.value)}
-          style={{ marginBottom: '20px' }}
+          style={{ marginBottom: '20px', backgroundColor: 'white' }}
         />
         <Button onClick={getPopularRestaurants} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
           Search
@@ -182,16 +188,19 @@ export default function LeaderboardsPage() {
             rowsPerPageOptions={[5, 10, 25]}
             autoHeight
             getRowId={(row) => row.business_id}
+            style={{
+              background: 'white'
+            }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
             <h3>Best Restaurants Per Category!</h3>
-            <TextField
+            <TextField 
               label="Enter Your Zip Code"
               variant="outlined"
               value={zipCodeFilter}
               onChange={(e) => setZipCodeFilter(e.target.value)}
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: '20px', backgroundColor: 'white', position: "center" }}
             />
             <Button onClick={getBestRestaurantsPerCategory} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
               Search
@@ -206,6 +215,9 @@ export default function LeaderboardsPage() {
               rowsPerPageOptions={[5, 10, 25]}
               autoHeight
               getRowId={(row) => row.business_id}
+              style={{
+                background: 'white'
+              }}
             />
           </Grid>
       </Grid>

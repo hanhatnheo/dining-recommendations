@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
+import './LazyTable.css';
 
 const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
   const [data, setData] = useState([]);
@@ -35,7 +36,7 @@ const LazyTable = ({ route, columns, defaultPageSize, rowsPerPageOptions }) => {
     <TableContainer>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow className="whiteBackgroundCell">
             {columns.map(col => <TableCell key={col.headerName}>{col.headerName}</TableCell>)}
           </TableRow>
         </TableHead>

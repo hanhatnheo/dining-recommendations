@@ -104,7 +104,7 @@ export default function SongsPage() {
       <Navbar /> {/* This will place the Navbar at the top */}
       <Container>
         <div style={{ backgroundColor: bgColors.Default, padding: 20, marginTop: 20, borderRadius: 20, }}>
-          <h2>Search for Restaurants</h2>
+          <h2 style={{color: "black"}}>Search for Restaurants</h2>
           <Grid container
             spacing={3}
             direction="row"
@@ -141,7 +141,7 @@ export default function SongsPage() {
                 max={5}
                 aria-labelledby="stars-slider"
               />
-              <p>Stars</p>
+              <p style={{color: "black"}}>Stars</p>
             </Grid>
             <Grid item xs={4}>
               <Slider
@@ -152,7 +152,7 @@ export default function SongsPage() {
                 max={25}
                 aria-labelledby="foodQ-slider"
               />
-              <p>Food Quality</p>
+              <p style={{color: "black"}}>Food Quality</p>
             </Grid>
             <Grid item xs={4}>
               <Slider
@@ -163,7 +163,7 @@ export default function SongsPage() {
                 max={25}
                 aria-labelledby="danceability-slider"
               />
-              <p>Drink Quality</p>
+              <p style={{color: "black"}}>Drink Quality</p>
             </Grid>
             <Grid item xs={4}>
               <Slider
@@ -174,7 +174,7 @@ export default function SongsPage() {
                 max={25}
                 aria-labelledby="serviceQ-slider"
               />
-              <p>Service Quality</p>
+              <p style={{color: "black"}}>Service Quality</p>
             </Grid>
             <Grid item xs={4}>
               <Slider
@@ -185,7 +185,7 @@ export default function SongsPage() {
                 max={25}
                 aria-labelledby="valuePerD-slider"
               />
-              <p>Value Per Dollar</p>
+              <p style={{color: "black"}}>Value Per Dollar</p>
             </Grid>
             <Grid item xs={12}>
               <Button variant="contained" onClick={search} style={{ marginTop: 20 }}>
