@@ -40,13 +40,14 @@ const random_restaurant = async function(req, res) {
 // Route 2: GET /random_attraction
 const random_attraction = async function(req, res) {
   connection.query(`
-    SELECT A.name, A.address, A.website
+    SELECT A.name, A.type
     FROM Attractions A
     WHERE (type = 'viewpoint' OR type = 'museum' OR type = 'park'
     OR type = 'theme_park' OR type = 'zoo' OR type = 'aquarium'
     OR type = 'art_gallery' OR type = 'gallery' OR type = 'artwork'
     OR type = 'attraction') 
     AND A.latitude BETWEEN -100 AND 100 AND A.longitude BETWEEN -100 AND 100 
+    ORDER by RAND()
     LIMIT 1 OFFSET 1;
   `, (err, data) => {
     if (err || data.length === 0) {
@@ -56,8 +57,6 @@ const random_attraction = async function(req, res) {
       res.json({
         name: data[0].name,
         type: data[0].type,
-        longitude: data[0].longitude,
-        latitude: data[0].latitude,
         website: data[0].website,
       });
     }
@@ -331,61 +330,61 @@ const most_popular_restaurants = async function(req, res) {
   const zipcode = req.query.zip_code;
   if (zipcode) {
     connection.query(`
-    WITH MostPopularRestaurants AS (
+      WITH MostPopularRestaurants AS (
+        SELECT
+            RES.business_id,
+            RES.name,
+            RES.address,
+            RES.stars,
+            RES.review_count
+        FROM Restaurants RES
+        WHERE RES.zip_code = '${zipcode}'
+        ORDER BY RES.review_count DESC
+        LIMIT 100
+      ),
+      HighRatingReviews AS (
+          SELECT
+              R.business_id,
+              R.text,
+              ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
+          FROM Reviews R
+          WHERE R.stars >= 4
+          AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
+          AND R.text IS NOT NULL
+      ),
+      MidRatingReviews AS (
+          SELECT
+              R.business_id,
+              R.text,
+              ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
+          FROM Reviews R
+          WHERE R.stars BETWEEN 2 AND 3
+          AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
+          AND R.text IS NOT NULL
+      ),
+      LowRatingReviews AS (
+          SELECT
+              R.business_id,
+              R.text,
+              ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
+          FROM Reviews R
+          WHERE R.stars <= 1
+          AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
+          AND R.text IS NOT NULL
+      )
       SELECT
-          RES.business_id,
-          RES.name,
-          RES.address,
-          RES.stars,
-          RES.review_count
-      FROM Restaurants RES
-      WHERE RES.zip_code = '${zipcode}'
-      ORDER BY RES.review_count DESC
-      LIMIT 100
-  ),
-  HighRatingReviews AS (
-      SELECT
-          R.business_id,
-          R.text,
-          ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
-      FROM Reviews R
-      WHERE R.stars >= 4
-      AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
-      AND R.text IS NOT NULL
-  ),
-  MidRatingReviews AS (
-      SELECT
-          R.business_id,
-          R.text,
-          ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
-      FROM Reviews R
-      WHERE R.stars BETWEEN 2 AND 3
-      AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
-      AND R.text IS NOT NULL
-  ),
-  LowRatingReviews AS (
-      SELECT
-          R.business_id,
-          R.text,
-          ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
-      FROM Reviews R
-      WHERE R.stars <= 1
-      AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
-      AND R.text IS NOT NULL
-  )
-  SELECT
-      MPR.business_id,
-      MPR.name,
-      MPR.address,
-      MPR.stars,
-      MPR.review_count,
-      HR.text AS high_rating_review_text,
-      MR.text AS mid_rating_review_text,
-      LR.text AS low_rating_review_text
-  FROM MostPopularRestaurants MPR
-  LEFT JOIN HighRatingReviews HR ON MPR.business_id = HR.business_id AND HR.rn = 1
-  LEFT JOIN MidRatingReviews MR ON MPR.business_id = MR.business_id AND MR.rn = 1
-  LEFT JOIN LowRatingReviews LR ON MPR.business_id = LR.business_id AND LR.rn = 1;
+          MPR.business_id,
+          MPR.name,
+          MPR.address,
+          MPR.stars,
+          MPR.review_count,
+          HR.text AS high_rating_review_text,
+          MR.text AS mid_rating_review_text,
+          LR.text AS low_rating_review_text
+      FROM MostPopularRestaurants MPR
+      LEFT JOIN HighRatingReviews HR ON MPR.business_id = HR.business_id AND HR.rn = 1
+      LEFT JOIN MidRatingReviews MR ON MPR.business_id = MR.business_id AND MR.rn = 1
+      LEFT JOIN LowRatingReviews LR ON MPR.business_id = LR.business_id AND LR.rn = 1;
       `
       , (err, data) => {
       if (err || data.length === 0) {
@@ -397,61 +396,60 @@ const most_popular_restaurants = async function(req, res) {
     });
   } else {
     connection.query(`
-    WITH MostPopularRestaurants AS (
+      WITH MostPopularRestaurants AS (
+        SELECT
+            RES.business_id,
+            RES.name,
+            RES.address,
+            RES.stars,
+            RES.review_count
+        FROM Restaurants RES
+        ORDER BY RES.review_count DESC
+        LIMIT 100
+      ),
+      HighRatingReviews AS (
+          SELECT
+              R.business_id,
+              R.text,
+              ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
+          FROM Reviews R
+          WHERE R.stars >= 4
+          AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
+          AND R.text IS NOT NULL
+      ),
+      MidRatingReviews AS (
+          SELECT
+              R.business_id,
+              R.text,
+              ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
+          FROM Reviews R
+          WHERE R.stars BETWEEN 2 AND 3
+          AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
+          AND R.text IS NOT NULL
+      ),
+      LowRatingReviews AS (
+          SELECT
+              R.business_id,
+              R.text,
+              ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
+          FROM Reviews R
+          WHERE R.stars <= 1
+          AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
+          AND R.text IS NOT NULL
+      )
       SELECT
-          RES.business_id,
-          RES.name,
-          RES.address,
-          RES.stars,
-          RES.review_count
-      FROM Restaurants RES
-      ORDER BY RES.review_count DESC
-      LIMIT 100
-  ),
-  HighRatingReviews AS (
-      SELECT
-          R.business_id,
-          R.text,
-          ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
-      FROM Reviews R
-      WHERE R.stars >= 4
-      AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
-      AND R.text IS NOT NULL
-  ),
-  MidRatingReviews AS (
-      SELECT
-          R.business_id,
-          R.text,
-          ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
-      FROM Reviews R
-      WHERE R.stars BETWEEN 2 AND 3
-      AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
-      AND R.text IS NOT NULL
-  ),
-  LowRatingReviews AS (
-      SELECT
-          R.business_id,
-          R.text,
-          ROW_NUMBER() OVER (PARTITION BY R.business_id ORDER BY R.review_id DESC) AS rn
-      FROM Reviews R
-      WHERE R.stars <= 1
-      AND R.business_id IN (SELECT business_id FROM MostPopularRestaurants)
-      AND R.text IS NOT NULL
-  )
-  SELECT
-      MPR.business_id,
-      MPR.name,
-      MPR.address,
-      MPR.stars,
-      MPR.review_count,
-      HR.text AS high_rating_review_text,
-      MR.text AS mid_rating_review_text,
-      LR.text AS low_rating_review_text
-  FROM MostPopularRestaurants MPR
-  LEFT JOIN HighRatingReviews HR ON MPR.business_id = HR.business_id AND HR.rn = 1
-  LEFT JOIN MidRatingReviews MR ON MPR.business_id = MR.business_id AND MR.rn = 1
-  LEFT JOIN LowRatingReviews LR ON MPR.business_id = LR.business_id AND LR.rn = 1;
-  
+          MPR.business_id,
+          MPR.name,
+          MPR.address,
+          MPR.stars,
+          MPR.review_count,
+          HR.text AS high_rating_review_text,
+          MR.text AS mid_rating_review_text,
+          LR.text AS low_rating_review_text
+      FROM MostPopularRestaurants MPR
+      LEFT JOIN HighRatingReviews HR ON MPR.business_id = HR.business_id AND HR.rn = 1
+      LEFT JOIN MidRatingReviews MR ON MPR.business_id = MR.business_id AND MR.rn = 1
+      LEFT JOIN LowRatingReviews LR ON MPR.business_id = LR.business_id AND LR.rn = 1;
       `
       , (err, data) => {
       if (err || data.length === 0) {
@@ -471,18 +469,18 @@ const best_restaurants_per_category = async function(req, res) {
   const zipcode = req.query.zip_code ?? '';
 
       connection.query(`
-        WITH RankedRestaurants AS (
-        SELECT R.name, R.address,
+      WITH RankedRestaurants AS (
+        SELECT /*+ NO_INDEX(zip_restaurants) */ 
+        DISTINCT R.business_id, 
+        R.name,
+        R.address,
         R.cat_1,
-        R.stars,
-        ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY AVG(Rev.stars)
-        DESC) AS ranking
-        FROM Restaurants R JOIN Reviews Rev ON R.business_id = Rev.business_id
-        AND R.zip_code = '${zipcode}'
-        GROUP BY R.business_id
-        )
-        SELECT name, address, cat_1, stars FROM RankedRestaurants
-        WHERE ranking <= 5;
+        R.stars, ROW_NUMBER() OVER (PARTITION BY R.cat_1 ORDER BY R.stars) AS ranking
+        FROM Restaurants R
+        WHERE R.zip_code = '${zipcode}')
+        SELECT DISTINCT business_id, name, address, cat_1, stars
+        FROM RankedRestaurants
+        WHERE ranking <= 5
         `
         , (err, data) => {
         if (err || data.length === 0) {
@@ -715,7 +713,7 @@ const restaurants_within_bounds = async function(req, res) {
   }
 }
 
-//Route 15.5: Get restaurants in top 5 zipcodes of all time GET /all_restaurants/zip_code/best
+//Route 14: GET /all_restaurants/zip_code/best
 const best_restaurants_in_top_zipcodes = async function(req, res) { 
   connection.query(`
       WITH Top5ZipCodes AS (
