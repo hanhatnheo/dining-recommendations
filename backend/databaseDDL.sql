@@ -57,3 +57,19 @@ CREATE TABLE LongLatLookUp(
     PRIMARY KEY (longitude, latitude)
 )
 
+CREATE TABLE TopZipCodes
+(
+    ZipCode              varchar(255)                null,
+    NumberOfRestaurants  bigint          default 0   not null,
+    ZipCodeAverageRating double(22, 5)               null,
+    ZipCodeTotalReviews  decimal(32)                 null,
+    ZipCodeRank          bigint unsigned default '0' not null
+);
+
+CREATE TABLE RestaurantsWithReviews
+(
+    business_id varchar(255) not null,
+    stars       double(2, 1) null,
+    text        longtext     null
+);
+
