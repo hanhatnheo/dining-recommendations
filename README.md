@@ -84,7 +84,7 @@ or if you use Yarn:
 yarn run start
 ```
 
-## Teat the project (front end)
+## Test the project (front end)
 ```bash
 npm run test
 ```
