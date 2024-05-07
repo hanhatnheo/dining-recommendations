@@ -146,3 +146,4 @@ We have a dataset of business reviews with 6,990,280 rows over 9 attributes. Thi
 [OpenStreetMap Tourist Attractions](https://hub.arcgis.com/datasets/openstreetmap::openstreetmap-tourist-attractions-for-north-america-1/explore):
 This dataset of user-contributed tourist attractions in North America contains 261,610 rows with 31 attributes. The most common attraction types are "Information" (60,834), "Camp_pitch" (42,899), and "Camp_site" (33,024). OpenStreetMap data is at the "heart" of our application, as the first page the user visits has them select attractions by clicking on map markers, from which they then discover nearby restaurants.
 
+Total database storage: Approximately 4GB.
