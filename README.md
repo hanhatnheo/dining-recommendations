@@ -5,6 +5,8 @@ With this web app, users can choose an attraction from a map interface and then 
 
 Link to public website: [exploreeat.vercel.app](https://exploreeat.vercel.app)
 
+Snapshot of website: <img width="1432" alt="Screen Shot 2024-05-06 at 9 26 42 PM" src="https://github.com/hanhatnheo/dining-recommendations/assets/96493224/753b1e12-baf6-4cac-8e45-628d2a56efde">
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
