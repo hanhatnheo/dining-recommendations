@@ -3,6 +3,8 @@
 
 With this web app, users can choose an attraction and then find nearby restaurants to simplify the process of pairing popular attractions next to popular restaurants quickly for things like dates, vacations, etc. It allows users to find information about the best attractions in their preferred zip-code, and helps them filter restaurants with complex parameters like combinations of average rating, ambience, value, and distance to attractions. We also highlight a series of leader boards, such as the best attraction-restaurant combinations in ZIP codes across the world. 
 
+Link to website: [exploreeat.vercel.app](exploreeat.vercel.app)
+
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
