@@ -179,13 +179,11 @@ export const Markers = ({ attractionsDetails, setAttractionsDetails }) => {
                         <div style={{ padding: '10px', borderRadius: '10px', color: 'black' }}>
                             <h3>{r.name}</h3> 
                                 <span>Stars: {r.stars}</span>
-                                                        <div>
-                        {r.food_score && <span>Food Score: {r.food_score}</span>}
-                        {r.drink_score && <span>, Drink Score: {r.drink_score}</span>}
-                        <br/>
-                        {r.service_score && <span>Service Score: {r.service_score}</span>}
-                        {r.value_score && <span>, Value Score: {r.value_score}</span>}
-                        </div>
+                                                        
+                        {r.food_score && <span>Food Score: {r.food_score.toFixed(2)}</span>}
+                        {r.drink_score && <span>Drink Score: {r.drink_score.toFixed(2)}</span>}
+                        {r.service_score && <span>Service Score: {r.service_score.toFixed(2)}</span>}
+                        {r.value_score && <span>Value Score: {r.value_score.toFixed(2)}</span>}
                     <span>Address: {r.address}</span>
                         </div>
                 </Popup>
