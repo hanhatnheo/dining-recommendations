@@ -27,7 +27,8 @@ app.get('/zip_generator/:zip_code', routes.zip_generator);
 app.get('/all_restaurants/zip_code/best', routes.best_restaurants_in_top_zipcodes);
 
 app.listen(config.server_port, () => {
-  console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
+  //console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
+  console.log(`Server running at https://exploreeat.fly.dev/`);
 });
 
 module.exports = app;

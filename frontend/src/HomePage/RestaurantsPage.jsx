@@ -30,12 +30,15 @@ export default function RestaurantsPage() {
   const [restaurant, setRestaurant] = useState(null); 
   const [attraction, setAttraction] = useState(null); 
 
+  const URLPREFIX = //`http://${config.server_host}:${config.server_port}/`;
+                `https://exploreeat.fly.dev/`; // deployed back-end
+
   useEffect(() => {
     fetchRandomRestaurant();
   }, []);
 
   const fetchRandomRestaurant = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/random_restaurant`)
+    fetch(`${URLPREFIX}random_restaurant`)
       .then(res => res.json())
       .then(resJson => {
         // Extracting variables
@@ -53,7 +56,7 @@ export default function RestaurantsPage() {
   }, []);
 
   const fetchRandomAttraction = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/random_attraction`)
+    fetch(`${URLPREFIX}random_attraction`)
       .then(res => res.json())
       .then(resJson => {
         // Extracting variables
@@ -67,7 +70,7 @@ export default function RestaurantsPage() {
   };
 
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/all_restaurants`)
+    fetch(`${URLPREFIX}all_restaurants`)
       .then(res => res.json())
       .then(resJson => {
         const restaurantsWithId = resJson.map(restaurant => ({ id: restaurant.business_id, ...restaurant }));
@@ -76,7 +79,7 @@ export default function RestaurantsPage() {
   }, []);
 
   const search = () => {
-    fetch(`http://${config.server_host}:${config.server_port}/all_restaurants?name=${name}` +
+    fetch(`${URLPREFIX}all_restaurants?name=${name}` +
       `&rating_min=${stars[0]}&&rating_max=${stars[1]}&food_score_min=${foodQ[0]}&food_score_max=${foodQ[1]}` +
       `&drink_score_min=${drinkQ[0]}&drink_score_max=${drinkQ[1]}&service_score_min=${serviceQ[0]}&service_score_max=${serviceQ[1]}` +
       `&value_score_min=${valuePerD[0]}&value_score_max=${valuePerD[1]}&zip_code=${zipCode}`

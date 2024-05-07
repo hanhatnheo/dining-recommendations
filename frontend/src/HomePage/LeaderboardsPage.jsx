@@ -20,10 +20,13 @@ export default function LeaderboardsPage() {
   const [zipCodeFilter, setZipCodeFilter] = useState('');
   const [categoryZipCodeFilter, setCategoryZipCodeFilter] = useState('');
 
+  const URLPREFIX = //`http://${config.server_host}:${config.server_port}/`;
+                `https://exploreeat.fly.dev/`; // deployed back-end
+
   const getRecommendedRestaurants = useCallback(async () => {
     try {
       // Fetch Recommended Restaurants (route 14)
-      const response = await axios.get(`http://${config.server_host}:${config.server_port}/all_restaurants/zip_code/best`)
+      const response = await axios.get(`${URLPREFIX}all_restaurants/zip_code/best`)
       console.log(response.data)
       setRecommendedData(response.data)
       console.log(recommendedData);
@@ -35,7 +38,7 @@ export default function LeaderboardsPage() {
   const getZipRank = useCallback(async () => {
     try {
       // Fetch Zipcode Ranking (route 11)
-      const response = await axios.get(`http://${config.server_host}:${config.server_port}/zipcode_ranking`)
+      const response = await axios.get(`${URLPREFIX}zipcode_ranking`)
       console.log(response.data)
       setZipcodeRankingData(response.data)
       console.log(zipcodeRankingData);
@@ -48,8 +51,8 @@ export default function LeaderboardsPage() {
     try {
       // Fetch Most Popular Restaurants (route 8)
       const url = zipCodeFilter
-        ? `http://${config.server_host}:${config.server_port}/most_popular_restaurants?zip_code=${zipCodeFilter}`
-        : `http://${config.server_host}:${config.server_port}/most_popular_restaurants`;
+        ? `${URLPREFIX}most_popular_restaurants?zip_code=${zipCodeFilter}`
+        : `${URLPREFIX}most_popular_restaurants`;
 
       console.log(url);
 
@@ -65,8 +68,8 @@ export default function LeaderboardsPage() {
     try {
       // Fetch Best Restaurants Per Category (route 9)
       const url = categoryZipCodeFilter
-        ? `http://${config.server_host}:${config.server_port}/best_restaurants_per_category?zip_code=${categoryZipCodeFilter}`
-        : `http://${config.server_host}:${config.server_port}/best_restaurants_per_category`;
+        ? `${URLPREFIX}best_restaurants_per_category?zip_code=${categoryZipCodeFilter}`
+        : `${URLPREFIX}best_restaurants_per_category`;
 
       console.log(url);
 

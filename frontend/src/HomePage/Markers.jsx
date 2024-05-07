@@ -9,7 +9,8 @@ import svg from '../assets/restaurant-icon.svg';
 import axios from 'axios';
 import './Markers.css';
 
-const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
+const URLPREFIX = //`http://${config.server_host}:${config.server_port}/`;
+                `https://exploreeat.fly.dev/`; // deployed back-end
 
 export const Markers = ({ attractionsDetails, setAttractionsDetails }) => {
     const { bounds } = UseMap();

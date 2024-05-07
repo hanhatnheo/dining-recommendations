@@ -7,7 +7,8 @@ import { RestaurantIcon } from './MarkerIcon';
 
 import axios from 'axios';
 
-const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
+const URLPREFIX = //`http://${config.server_host}:${config.server_port}/`;
+                `https://exploreeat.fly.dev/`; // deployed back-end
 
 export const Restaurants = () => {
     const { bounds } = UseMap();

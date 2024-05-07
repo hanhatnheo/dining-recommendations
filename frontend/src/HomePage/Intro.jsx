@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../../server/config.json';
 
-const URLPREFIX = `http://${config.server_host}:${config.server_port}/`;
+const URLPREFIX = //`http://${config.server_host}:${config.server_port}/`;
+                `https://exploreeat.fly.dev/`; // deployed back-end
 
 const Intro = () => {
   const [zipCode, setZipCode] = useState('');
