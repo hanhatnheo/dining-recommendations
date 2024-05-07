@@ -136,11 +136,11 @@ We have dockerized the application, with the server (backend) hosted on fly.io. 
 
 ## Data Sources
 [Yelp Businesses](https://www.yelp.com/dataset):
-Our first dataset is a set of businesses listed on Yelp, with 1,000,000+ rows and 56 attributes. A plurality of these businesses are Restaurants / Food (54,618, 24,777), making this dataset suitable for our purposes. Business latitudes / longitudes center in North America.This dataset is how we recommend restaurants which fit a user's search queries, namely its location, quality according to star ratings, number of reviews, and our own metric and proximity to tourist attractions.
+Our first dataset is a set of businesses listed on Yelp, with 1,000,000+ rows and 56 attributes. A plurality of these businesses are Restaurants / Food (54,618 / 24,777), making this dataset suitable for our purposes. Business latitudes / longitudes center in North America.This dataset is how we recommend restaurants which fit a user's search queries, namely its location, quality according to star ratings, number of reviews, and our own metric and proximity to tourist attractions.
 
 [Yelp Reviews](https://www.yelp.com/dataset):
-We have a dataset of business reviews with $6,990,280$ columns over 9 attributes. This dataset was used to define a more sophisticated restaurant scoring system than Yelp's star system and is regularly joined with Restaurants to show the users some reviews for a restaurant.
+We have a dataset of business reviews with 6,990,280 rows over 9 attributes. This dataset was used to define a more sophisticated restaurant scoring system than Yelp's star system and is regularly joined with Restaurants to show the users some reviews for a restaurant.
 
 [OpenStreetMap Tourist Attractions](https://hub.arcgis.com/datasets/openstreetmap::openstreetmap-tourist-attractions-for-north-america-1/explore):
-This dataset of user-contributed tourist attractions in North America contains $261,610$ rows with 31 attributes. The most common attraction types are "Information" (60,834), "Camp_pitch" (42,899), and "Camp_site" (33,024). OpenStreetMap data is at the "heart" of our application, as the first page the user visits has them select attractions by clicking on map markers, from which they then discover nearby restaurants.
+This dataset of user-contributed tourist attractions in North America contains 261,610 rows with 31 attributes. The most common attraction types are "Information" (60,834), "Camp_pitch" (42,899), and "Camp_site" (33,024). OpenStreetMap data is at the "heart" of our application, as the first page the user visits has them select attractions by clicking on map markers, from which they then discover nearby restaurants.
 
