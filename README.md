@@ -67,7 +67,16 @@ yarn dev
 
 This will start the development server on `http://localhost:5173`.
 
-You would also need to navigate to server directory and start the server on `http://localhost:8080`.
+You would also need to navigate to server directory and start the server on `http://localhost:8080`. To do so,
+```bash
+npm start
+```
+
+or if you use Yarn:
+
+```bash
+yarn run start
+```
 
 ## Building and running for production
 
