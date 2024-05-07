@@ -39,6 +39,10 @@ To install this project, follow these steps:
    ```bash
    yarn install
    ```
+Note, given recent React update, you might need to run the below command instead to resolve conflicts:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
 
 ## Configuration
 
@@ -78,6 +82,17 @@ or if you use Yarn:
 yarn run start
 ```
 
+## Teat the project (front end)
+```bash
+npm run test
+```
+
+if you want more verbose code coverage information:
+
+```bash
+npm run report
+```
+
 ## Building and running for production
 
 To build the project for production:
@@ -114,6 +129,8 @@ yarn serve
 Our application is built on the React-Express-SQL stack. The front-end website is built in React, using Material-UI for many components. We used the MapBox (React MapGL) to render an interactive map that displayed attractions and restaurants, visualizing their relative distance and respective information. We retrieved geographical boundary information from point coordinates to build data for the map.
 
 The backend is built with Node.js and Express. Express routes each incoming query to a controller function, which parses the input and calls an appropriate handler to retrieve data from the backend. We selected MySQL because of its compatibility and ease of setup. The server/database is hosted on Amazon RDS and the backend communicates with it through SQL queries.
+
+Extensive frontend testing is done with [vitest](https://vitest.dev), with code coverage > 87%.
 
 We have dockerized the application, with the server (backend) hosted on fly.io. The website is then deployed on Vercel.
 
